@@ -1,48 +1,55 @@
 # Media Server
 
-Velkommen til Media Server-prosjektet.
+Et ryddig, skalerbart og personlig mediebibliotek bygget for Jellyfin.
 
-## Mål
+## 🎯 Hovedmål
 
-* Teste Media Server på hoved-PC-en først.
-* Lage et pent og oversiktlig grensesnitt.
-* Bygge et Netflix-lignende brukergrensesnitt.
-* Bygge opp biblioteket gradvis med filmer, serier og anime.
-* Flytte Media Server til en dedikert maskin når systemet er stabilt.
+Målet er å bygge et profesjonelt mediebibliotek som er enkelt å bruke fra:
 
-## Bibliotek
+- PC
+- Mobil
+- Nettbrett
+- NVIDIA Shield TV Pro
+- Andre Jellyfin-klienter
 
-* Filmer
-* Serier
-* Anime
+Biblioteket skal også kunne støtte nedlasting for offline-bruk gjennom kompatible Jellyfin-klienter. Dette implementeres senere.
 
-## Utvikling
+---
 
-* Bygge prosjektet gradvis.
-* Dokumentere viktige endringer.
-* Holde Media Server helt separat fra Trading-prosjektet.
-* Alle større endringer skal lagres i GitHub.
+## 📚 Bibliotek
 
-## Status
+Første versjon består kun av:
 
-* Prosjektet er under utvikling.
-* Hoved-PC-en brukes som første testplattform.
-* Detaljert teknisk oppsett kommer senere.
+- 🎬 Movies
+- 📺 Series
+- 🎨 Cartoons
+- 🇯🇵 Anime
 
-## Arkitektur
+Interne arbeidsdata og sikkerhetskopier holdes separat:
 
-* Første fase: Media Server på hoved-PC.
-* Neste fase: Stabilisering og testing.
-* Senere fase: Flytting til dedikert servermaskin.
+- `_Data`
+- `_Backups`
 
-## Sikkerhet
+Følgende kategorier skal **ikke** bygges inn i første versjon:
 
-* Media Server skal være privat.
-* Tilgang og sikkerhet skal vurderes før ekstern tilgang aktiveres.
-* Ingen passord, API-nøkler eller andre hemmeligheter skal lagres i GitHub.
+- Music
+- TV Channels
+- Recommendations
+- Anime Movies
+- OVA
 
-## Endringslogg
+Disse kan eventuelt legges til senere.
 
-* Endringer skal dokumenteres.
-* Større versjoner og milepæler skal lagres i GitHub.
-* Viktige beslutninger skal dokumenteres slik at både ChatGPT og andre AI-verktøy kan forstå prosjektets historikk.
+---
+
+## 🗂️ Mappestruktur
+
+```text
+Media/
+├── Movies/
+├── Series/
+├── Cartoons/
+├── Anime/
+│
+├── _Data/
+└── _Backups/
