@@ -1,12 +1,12 @@
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 import shutil
 
 from path_safety import safe_path
 
 
 def create_backup(source: str | Path) -> Path:
-    """Oppretter en sikkerhetskopi av angitt mappe."""
+    """Oppretter en datert sikkerhetskopi av en katalog."""
 
     source_path = safe_path(source)
 
@@ -20,20 +20,25 @@ def create_backup(source: str | Path) -> Path:
             f"Backup source must be a directory: {source_path}"
         )
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_root = safe_path("_Backups")
 
-    backup_path = safe_path(
-        f"_Backups/backup_{timestamp}"
-    )
+    # En backup skal aldri kunne kopiere seg selv inn i seg selv.
+    if source_path == backup_root or backup_root.is_relative_to(source_path):
+        raise ValueError(
+            f"Backup source cannot contain backup destination: {source_path}"
+        )
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_path = backup_root / f"backup_{timestamp}"
 
     backup_path.parent.mkdir(
         parents=True,
-        exist_ok=True
+        exist_ok=True,
     )
 
     shutil.copytree(
         source_path,
-        backup_path
+        backup_path,
     )
 
     return backup_path
