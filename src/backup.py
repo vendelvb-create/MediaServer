@@ -20,7 +20,19 @@ def create_backup(source: str | Path) -> Path:
             f"Backup source must be a directory: {source_path}"
         )
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_root = safe_path("_Backups")
+
+    # Backup-mappen skal aldri kunne kopiere seg selv,
+    # eller en mappe som inneholder backup-mappen.
+    if (
+        source_path == backup_root
+        or backup_root.is_relative_to(source_path)
+    ):
+        raise ValueError(
+            f"Backup source cannot contain backup destination: {source_path}"
+        )
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
 
     backup_path = safe_path(
         f"_Backups/backup_{timestamp}"
