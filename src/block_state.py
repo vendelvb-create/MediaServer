@@ -1,16 +1,12 @@
 from pathlib import Path
 import json
 
+from path_safety import safe_path
+
 
 def get_state_file() -> Path:
-    """Returnerer filen som lagrer blokkstatus."""
-    return (
-        Path.home()
-        / "Desktop"
-        / "Medialibrary_test"
-        / "_Data"
-        / "block_state.json"
-    ).resolve()
+    """Returnerer sikker fil for blokkstatus."""
+    return safe_path("_Data/block_state.json")
 
 
 def load_state() -> dict:
