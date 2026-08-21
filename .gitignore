@@ -1,1 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
 
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Logs
+*.log
+*.tmp
+
+# Project cache
+MediaLibrary_Test/_Cache/
+**/_Cache/
+
+# Generated project data
+MediaLibrary_Test/_Data/
+**/_Data/
+
+# Generated manifests
+MediaLibrary_Test/_Manifests/
+**/_Manifests/
+
+# Backups
+MediaLibrary_Test/_Backups/
+**/_Backups/
+
+# Local development files
+.env
+.env.*
+!.env.example
+*.local
+
+# IDE / editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.temp
+*.temporary
+*.bak
+*.swp
+*.swo
+*~
+
+# Python test / coverage files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build / distribution files
+build/
+dist/
+*.egg-info/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
