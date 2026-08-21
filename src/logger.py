@@ -1,10 +1,12 @@
 from pathlib import Path
 import logging
 
+from path_safety import get_test_root, safe_path
+
 
 def get_log_dir() -> Path:
-    """Returnerer den godkjente testmappen for logger."""
-    return (Path.home() / "Desktop" / "Medialibrary_test" / "_Logs").resolve()
+    """Returnerer godkjent loggmappe innenfor testroten."""
+    return safe_path("_Logs")
 
 
 def get_logger(name: str = "mediaserver") -> logging.Logger:
@@ -12,7 +14,7 @@ def get_logger(name: str = "mediaserver") -> logging.Logger:
     Oppretter en grunnleggende logger.
 
     Loggeren skriver til testmiljøets _Logs-mappe.
-    Ingen andre deler av systemet kobles inn ennå.
+    Alle filstier valideres gjennom safe_path().
     """
     log_dir = get_log_dir()
     log_dir.mkdir(parents=True, exist_ok=True)
@@ -22,7 +24,7 @@ def get_logger(name: str = "mediaserver") -> logging.Logger:
     if not logger.handlers:
         logger.setLevel(logging.INFO)
 
-        log_file = log_dir / "mediaserver.log"
+        log_file = safe_path("_Logs/mediaserver.log")
 
         handler = logging.FileHandler(log_file, encoding="utf-8")
         formatter = logging.Formatter(
