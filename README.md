@@ -25,12 +25,7 @@ Første versjon består kun av:
 - 🎨 Cartoons
 - 🇯🇵 Anime
 
-Interne arbeidsdata og sikkerhetskopier holdes separat:
-
-- `_Data`
-- `_Backups`
-
-Følgende kategorier skal **ikke** bygges inn i første versjon:
+Følgende kategorier skal ikke bygges inn i første versjon:
 
 - Music
 - TV Channels
@@ -38,18 +33,13 @@ Følgende kategorier skal **ikke** bygges inn i første versjon:
 - Anime Movies
 - OVA
 
-Disse kan eventuelt legges til senere.
+Disse kan eventuelt vurderes i en senere versjon.
 
 ---
 
-## 🗂️ Mappestruktur
+## 🗂️ Utviklings- og testmiljø
+
+All første utvikling og testing skal foregå isolert i:
 
 ```text
-Media/
-├── Movies/
-├── Series/
-├── Cartoons/
-├── Anime/
-│
-├── _Data/
-└── _Backups/
+Desktop\MediaLibrary_Test
