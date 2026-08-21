@@ -2,26 +2,24 @@ from pathlib import Path
 
 
 def get_test_root() -> Path:
-    """
-    Returnerer den godkjente testroten.
-
-    All filskriving i testfasen skal holdes innenfor denne katalogen.
-    """
+    """Returnerer den faste testroten."""
     return (Path.home() / "Desktop" / "MediaLibrary_Test").resolve()
 
 
 def safe_path(path: str | Path) -> Path:
     """
-    Kontrollerer at en sti ligger innenfor den godkjente testroten.
+    Returnerer en sikker absolutt sti innenfor testroten.
 
-    Avviser blant annet:
-    - path traversal med ..
-    - absolutte stier utenfor testroten
-    - stier til andre kataloger eller disker
+    Relative stier tolkes alltid relativt til MediaLibrary_Test,
+    ikke relativt til terminalens nåværende arbeidsmappe.
     """
-
     root = get_test_root()
-    candidate = Path(path).expanduser().resolve()
+    candidate = Path(path)
+
+    if not candidate.is_absolute():
+        candidate = root / candidate
+
+    candidate = candidate.resolve()
 
     try:
         candidate.relative_to(root)
