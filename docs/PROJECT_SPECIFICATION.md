@@ -1,372 +1,165 @@
-# MediaServer — Project Specification
+# MediaServer — PROJECT SPECIFICATION v2
 
-**Document status:** Active project specification
-**Version:** 1.0
-**Primary purpose:** Define exactly how the MediaServer project must be designed, developed, tested, organized and expanded.
+## 1. Project Definition
 
----
+This document is the **authoritative technical specification** for the MediaServer project.
 
-# 1. PROJECT PURPOSE
+The project is a personal, clean, reliable and scalable media library designed primarily for **Jellyfin**.
 
-The goal of this project is to create a clean, reliable and scalable personal media library designed for **Jellyfin**.
-
-The finished library must work well with:
-
-* PC
-* Mobile
-* Tablet
-* NVIDIA Shield TV
-* Other compatible Jellyfin clients
-
-The system must be designed so the library can grow safely over time without requiring the entire project to be rebuilt from scratch.
-
-The project must prioritize:
+The implementation must prioritize:
 
 1. Reliability
 2. Clean organization
-3. Correct metadata
-4. Jellyfin compatibility
-5. Safe backups
-6. Clear logging
-7. Recoverability
+3. Verified information
+4. Safe and reversible changes
+5. Backups
+6. Logging
+7. Jellyfin compatibility
 8. Simple maintenance
-9. Controlled block-by-block expansion
+9. Block-by-block development
 
-Speed must never be prioritized over data correctness and project safety.
+The project MUST NOT expand its scope without explicit approval.
 
----
-
-# 2. IMPORTANT AI INSTRUCTION
-
-Any AI working on this repository, including Grok or another coding agent, MUST read this document before modifying the project.
-
-The AI MUST treat this document as the current project specification.
-
-The AI MUST NOT:
-
-* invent requirements
-* silently change the project scope
-* remove existing requirements
-* invent metadata
-* invent seasons
-* skip failed verification
-* start a later block before the previous block is completely verified
-* rewrite working components without a clear reason
-* place generated data in arbitrary locations
-* modify existing media outside the designated test environment
-
-If the AI is uncertain about an important decision, it MUST stop and ask for clarification.
-
-**When in doubt: STOP. Do not guess.**
+If an AI, script or developer is uncertain about a requirement, it MUST stop and ask for clarification rather than guessing.
 
 ---
 
-# 3. CURRENT PROJECT SCOPE
+# 2. Current Scope
 
-The initial MediaServer scope contains exactly these media categories:
+The current media categories are exactly:
 
-```text
-Movies
-Series
-Cartoons
-Anime
-```
+* Movies
+* Series
+* Cartoons
+* Anime
 
-The project also requires internal support folders for:
+The current project also requires internal folders for:
 
-```text
-_Data
-_Backups
-```
+* `_Backups`
+* `_Cache`
+* `_Data`
+* `_Logs`
+* `_Manifests`
+* `_Docs`
 
-The following are explicitly OUTSIDE the current scope:
+The following are **NOT currently part of the implementation**:
 
 * Music
-* TV channels
+* TV Channels
 * Recommendations
-* Anime movies
+* Anime Movies
 * Anime OVAs
+* Anime standalone specials
 * Advanced duplicate-management systems
+* Automatic production migration
 * Offline-download implementation
-* Other media categories not explicitly approved
 
-These features may be added later, but they MUST NOT be added automatically.
-
----
-
-# 4. DEVELOPMENT ENVIRONMENT
-
-All development and testing MUST initially happen inside a dedicated test folder on the user's Windows Desktop.
-
-Preferred name:
-
-```text
-Desktop\MediaLibrary_Test
-```
-
-or:
-
-```text
-Desktop\MediaServer_Test
-```
-
-The exact name may be selected by the user.
-
-The important rule is:
-
-**The project MUST use a dedicated test directory on the Desktop before anything is considered production-ready.**
-
-The AI MUST NOT:
-
-* modify unrelated system directories
-* overwrite existing media libraries
-* modify the user's production media collection
-* delete existing user data
-* assume a production path
-* silently move the project to another location
-
-The test environment must be isolated and recoverable.
+These features may be considered later, but MUST NOT be added automatically.
 
 ---
 
-# 5. REQUIRED MEDIA STRUCTURE
+# 3. Development Environment
 
-The intended media structure is:
+All initial development MUST take place inside this dedicated Desktop folder:
 
 ```text
-Media/
+Desktop/
+└── MediaLibrary_Test/
+```
+
+`MediaLibrary_Test` is the isolated development and testing environment.
+
+The system MUST NOT modify unrelated files, folders or existing media libraries during development.
+
+The system MUST NOT:
+
+* Delete existing personal files
+* Move existing personal media automatically
+* Modify Windows system folders
+* Modify unrelated Desktop folders
+* Write generated project data outside the test environment
+* Assume the test folder is the final production location
+
+Production migration is a separate future step.
+
+---
+
+# 4. Required Root Structure
+
+The required structure is:
+
+```text
+MediaLibrary_Test/
+├── Anime/
+├── Cartoons/
 ├── Movies/
 ├── Series/
-├── Cartoons/
-├── Anime/
+├── _Backups/
+├── _Cache/
 ├── _Data/
-└── _Backups/
+├── _Logs/
+├── _Manifests/
+└── _Docs/
 ```
 
-No additional top-level media categories should be created unless explicitly requested.
+These names and spellings MUST remain consistent.
+
+Media folders:
+
+```text
+Anime
+Cartoons
+Movies
+Series
+```
+
+Internal folders:
+
+```text
+_Backups
+_Cache
+_Data
+_Logs
+_Manifests
+_Docs
+```
+
+The system MUST NOT silently rename these folders or create alternative spellings such as:
+
+```text
+_Cashe
+_Manifest
+Backups
+Data
+Movie
+TVShows
+```
 
 ---
 
-# 6. MOVIES
+# 5. GitHub Documentation
 
-Movies belong under:
+The GitHub repository contains the authoritative project documentation.
 
-```text
-Media/Movies/
-```
-
-The movie organization must be clean and human-readable.
-
-A movie folder must use the movie's real title.
-
-Example:
+The detailed specification belongs in:
 
 ```text
-Media/
-└── Movies/
-    └── Interstellar/
-        └── Interstellar (2014).mkv
+docs/PROJECT_SPECIFICATION.md
 ```
 
-For a movie franchise, the franchise can have its own parent folder.
+`README.md` is only a high-level project overview.
 
-Example:
+Detailed technical requirements MUST NOT depend on README.md.
 
-```text
-Media/
-└── Movies/
-    └── Toy Story/
-        ├── Toy Story 1/
-        │   └── Toy Story 1.mkv
-        ├── Toy Story 2/
-        │   └── Toy Story 2.mkv
-        └── Toy Story 3/
-            └── Toy Story 3.mkv
-```
-
-The important requirement is that the actual movie title is clearly represented.
-
-Do NOT create generic names such as:
-
-```text
-Movie 0001
-Movie 0002
-Movie 0003
-```
-
-Ranking numbers MUST NOT replace the movie title.
-
-Ranking information belongs in project metadata/manifests.
+The local `_Docs/` folder is for local project documentation and MUST NOT replace the GitHub specification.
 
 ---
 
-# 7. SERIES
+# 6. Block-Based Development
 
-Normal television series belong under:
+The catalog MUST be generated in fixed blocks of 1,000 titles.
 
-```text
-Media/Series/
-```
-
-Example:
-
-```text
-Media/
-└── Series/
-    └── Breaking Bad/
-        ├── Season 01/
-        ├── Season 02/
-        ├── Season 03/
-        ├── Season 04/
-        └── Season 05/
-```
-
-A series folder must use the real series title.
-
-The system MUST NOT invent seasons.
-
-A season folder may only be created when the season can be verified from reliable information.
-
-The system MUST NOT assume that every series has Season 01 simply because it is a series.
-
----
-
-# 8. CARTOONS
-
-Cartoons are a separate category from both normal Series and Anime.
-
-Cartoons include Western/non-anime animated television shows such as:
-
-* The Simpsons
-* Family Guy
-* American Dad!
-* Futurama
-* Similar animated television series
-
-Cartoons belong under:
-
-```text
-Media/Cartoons/
-```
-
-Example:
-
-```text
-Media/
-└── Cartoons/
-    └── Family Guy/
-        ├── Season 01/
-        ├── Season 02/
-        └── Season 03/
-```
-
-Animated does NOT automatically mean Anime.
-
-If a title cannot be classified confidently as Anime or Cartoon, the AI MUST flag it for review rather than guessing.
-
----
-
-# 9. ANIME
-
-Anime is a completely separate top-level category.
-
-Anime belongs under:
-
-```text
-Media/Anime/
-```
-
-Example:
-
-```text
-Media/
-└── Anime/
-    └── Fairy Tail/
-        ├── Season 01/
-        ├── Season 02/
-        └── Season 03/
-```
-
-Only anime television/series content is included in the current scope.
-
-The current project MUST NOT include:
-
-* Anime movies
-* OVAs
-* standalone anime specials
-
-These can be addressed later.
-
-The AI MUST NOT invent Anime seasons.
-
-If season information cannot be verified, it must be flagged for later review.
-
----
-
-# 10. EPISODES
-
-When actual episode files are eventually added, they should use a Jellyfin-friendly naming convention.
-
-Example:
-
-```text
-Fairy Tail - S01E01.ext
-Fairy Tail - S01E02.ext
-Fairy Tail - S01E03.ext
-```
-
-The purpose is to allow Jellyfin to identify:
-
-* series
-* season
-* episode
-* episode number
-
-The project should rely on correct file naming and metadata so Jellyfin can display episodes in the correct order.
-
-Manual rearrangement of episodes inside Jellyfin should not normally be necessary when the files are correctly named.
-
----
-
-# 11. WATCH PROGRESS / RESUME PLAYBACK
-
-The Jellyfin experience must preserve playback progress.
-
-If the user starts a movie and stops watching partway through, Jellyfin should retain the playback position.
-
-Example:
-
-A movie is 2 hours long.
-
-The user stops watching at:
-
-```text
-01:30:00
-```
-
-When the user returns to the same movie, the system should allow playback to continue from approximately:
-
-```text
-01:30:00
-```
-
-rather than automatically restarting from the beginning.
-
-The same principle applies to television episodes.
-
-The MediaServer project must remain compatible with Jellyfin's normal watch-progress and resume functionality.
-
-Playback progress should work across supported Jellyfin clients where Jellyfin provides that functionality.
-
-The project must not intentionally reset playback progress when media is reorganized.
-
----
-
-# 12. RANKING SYSTEM
-
-The library will eventually contain large ranked collections.
-
-The project must be built in blocks of exactly 1,000 titles.
+The system MUST NEVER attempt to generate the entire catalog in one operation.
 
 The intended sequence is:
 
@@ -383,184 +176,498 @@ The intended sequence is:
 9001–10000
 ```
 
-The same pattern may continue beyond 10,000 if the user later requests it.
+The same 1,000-title pattern may continue beyond 10,000 if explicitly required.
 
-The ranking applies independently to:
+## Absolute block rule
 
-* Movies
-* Series
-* Cartoons
-* Anime
+Only **ONE block may be processed at a time**.
 
-Ranking numbers are catalog information.
+The system MUST NOT:
 
-They must not replace human-readable media names.
+* Generate multiple blocks simultaneously
+* Automatically continue to the next block
+* Skip a failed block
+* Start the next block before verification
+* Assume that a partially completed block is complete
 
 ---
 
-# 13. ABSOLUTE BLOCK RULE
+# 7. Block Completion Requirements
 
-Only ONE 1,000-title block may be processed at a time.
+A block is considered complete ONLY when all required checks have passed.
 
-The system MUST NOT attempt to generate:
+For example:
 
-* 10,000 titles in one operation
-* 100,000 titles in one operation
-* multiple 1,000-title blocks simultaneously
+```text
+Block 0001–1000
+        ↓
+Generation
+        ↓
+Validation
+        ↓
+Verification
+        ↓
+Logging
+        ↓
+Backup
+        ↓
+100% completion confirmation
+        ↓
+Only then → Block 1001–2000
+```
 
-The first block is:
+The next block MUST NOT start until the previous block is:
+
+* Fully generated
+* Verified
+* Logged
+* Backed up
+* Confirmed complete
+
+If verification fails, development MUST stop.
+
+No automatic continuation is allowed.
+
+---
+
+# 8. Immediate Development Priority
+
+The immediate priority is:
 
 ```text
 0001–1000
 ```
 
-The next block is:
+The system MUST complete and verify:
+
+```text
+0001–1000
+```
+
+before it is allowed to begin:
 
 ```text
 1001–2000
 ```
 
-and so on.
+The same rule applies to every later block.
 
-The next block MUST NOT begin until the previous block is completely finished and verified.
+For example:
 
----
+```text
+2001–3000
+```
 
-# 14. BLOCK COMPLETION REQUIREMENTS
+cannot begin until:
 
-A block is NOT considered complete merely because the script stopped without an error.
+```text
+1001–2000
+```
 
-A block is considered complete only when ALL required checks have passed.
-
-For example, Block 0001–1000 must be:
-
-1. Generated
-2. Checked
-3. Verified
-4. Logged
-5. Backed up
-6. Checked for structural errors
-7. Checked for failed data operations
-8. Confirmed ready for the next block
-
-Only then may Block 1001–2000 begin.
-
-The AI MUST NOT automatically continue to the next block.
+is completely finished and verified.
 
 ---
 
-# 15. FAILURE RULE
+# 9. Movies
 
-If any important verification fails:
+Movies belong exclusively under:
 
-**STOP.**
+```text
+Movies/
+```
 
-Do not automatically continue.
+Movies should use human-readable names.
 
-Examples of reasons to stop include:
+The project uses a franchise-friendly organization.
 
-* API failure that prevents verification
-* corrupted metadata
-* missing required data
-* incorrect folder structure
-* invalid season information
-* unexpected category classification
-* incomplete block
-* failed backup
-* failed manifest generation
-* unexpected script error
+Example:
 
-The AI must report:
+```text
+Movies/
+└── Toy Story/
+    ├── Toy Story 1/
+    │   └── Toy Story 1.mkv
+    ├── Toy Story 2/
+    │   └── Toy Story 2.mkv
+    └── Toy Story 3/
+        └── Toy Story 3.mkv
+```
 
-* what failed
-* where it failed
-* what data was affected
-* whether anything was written
-* whether recovery is possible
+For a standalone movie:
 
-The AI must not hide or silently ignore failures.
+```text
+Movies/
+└── Interstellar/
+    └── Interstellar (2014).mkv
+```
+
+The system MUST NOT use ranking numbers as the primary folder name.
+
+Incorrect:
+
+```text
+Movie 0001/
+Movie 0002/
+Movie 0003/
+```
+
+Correct:
+
+```text
+Interstellar/
+Toy Story/
+The Matrix/
+```
+
+Ranking information belongs in manifests or metadata.
 
 ---
 
-# 16. DATA SOURCES
+# 10. Series
 
-The project may use reliable metadata sources such as:
+Normal television and streaming series belong under:
+
+```text
+Series/
+```
+
+Example:
+
+```text
+Series/
+└── Breaking Bad/
+    ├── Season 01/
+    ├── Season 02/
+    ├── Season 03/
+    ├── Season 04/
+    └── Season 05/
+```
+
+Only verified seasons may be created.
+
+The system MUST NEVER invent a season.
+
+If reliable information confirms only Seasons 01–03, the system MUST NOT create Season 04 simply because it expects one.
+
+---
+
+# 11. Cartoons
+
+Cartoons are a separate category from both normal Series and Anime.
+
+Examples include:
+
+* The Simpsons
+* Family Guy
+* American Dad!
+* Futurama
+* Other appropriate Western animated television series
+
+Structure:
+
+```text
+Cartoons/
+└── Family Guy/
+    ├── Season 01/
+    ├── Season 02/
+    └── Season 03/
+```
+
+Cartoons MUST NOT automatically be placed under Anime simply because they are animated.
+
+If classification is unclear, the system MUST flag the title for review.
+
+The system MUST NOT guess.
+
+---
+
+# 12. Anime
+
+Anime is a separate top-level category:
+
+```text
+Anime/
+```
+
+Example:
+
+```text
+Anime/
+└── Fairy Tail/
+    ├── Season 01/
+    ├── Season 02/
+    └── Season 03/
+```
+
+The current Anime scope is **series only**.
+
+The following are explicitly excluded:
+
+* Anime Movies
+* OVAs
+* Standalone specials
+
+These may be implemented later only after explicit approval.
+
+Anime seasons MUST NOT be guessed.
+
+---
+
+# 13. Season Verification
+
+Season folders must represent real, verified seasons.
+
+The system MUST use reliable metadata or verified source information.
+
+The system MUST NOT create a season folder simply because:
+
+* A show exists
+* An episode count exists
+* Another source suggests a season might exist
+* The AI assumes a standard season structure
+
+When season information cannot be verified, the system MUST:
+
+1. Leave the season structure unchanged
+2. Record the issue
+3. Flag it for review if necessary
+4. Continue only if doing so does not create incomplete or misleading data
+
+---
+
+# 14. Episode Organization and Jellyfin
+
+The final library is intended to work cleanly with Jellyfin.
+
+Episode files should use a recognizable naming structure such as:
+
+```text
+Series Name - S01E01.ext
+Series Name - S01E02.ext
+Series Name - S01E03.ext
+```
+
+This allows Jellyfin to identify:
+
+* Series
+* Season
+* Episode
+* Episode number
+* Playback order
+
+The project does NOT require manually sorting episodes inside Jellyfin when correct episode numbering is already present in the filenames.
+
+The user may manually add episode files later.
+
+---
+
+# 15. Playback Resume / Continue Watching
+
+The media experience MUST support normal Jellyfin playback-resume behavior.
+
+If a user watches part of a movie or episode and stops, the system should allow Jellyfin to resume from the previous playback position when the user returns.
+
+Example:
+
+A movie is 2 hours long.
+
+The user watches:
+
+```text
+1 hour 30 minutes
+```
+
+The user exits the movie.
+
+When the user opens the same movie again, Jellyfin should offer continuation from approximately:
+
+```text
+1 hour 30 minutes
+```
+
+rather than forcing the movie to restart from the beginning.
+
+The project should preserve compatibility with Jellyfin's playback-progress and resume functionality.
+
+Playback state should work correctly across supported Jellyfin clients where Jellyfin provides that functionality.
+
+---
+
+# 16. Supported Clients
+
+The library should work well with:
+
+* PC
+* Mobile
+* Tablet
+* NVIDIA Shield TV
+* Other compatible Jellyfin clients
+
+The initial implementation does not need to implement separate applications for each platform.
+
+The goal is to maintain a clean Jellyfin-compatible backend/library structure.
+
+---
+
+# 17. Offline Downloading
+
+Offline downloading is a future requirement.
+
+The system should remain compatible with Jellyfin clients that support downloading where applicable.
+
+However, offline-download functionality MUST NOT be implemented as part of the initial catalog-building system unless explicitly requested.
+
+---
+
+# 18. Metadata
+
+Metadata should be obtained from reliable sources.
+
+Potential sources include:
 
 * IMDb
-* reliable anime metadata APIs
+* Reliable anime metadata providers
 * Jellyfin-compatible metadata providers
-* other sources explicitly approved by the user
+* Other approved sources
 
-The AI must distinguish between:
+Metadata SHOULD be cached where practical.
 
-**verified information**
+The system MUST NOT invent:
 
-and
+* Movie titles
+* Series titles
+* Anime titles
+* Seasons
+* Episode numbers
+* Release information
+* Ratings
+* Other factual metadata
 
-**assumed information**.
-
-Assumptions must not be silently converted into project data.
-
-If information cannot be verified, the item should be flagged for review.
-
----
-
-# 17. API HANDLING
-
-External APIs may temporarily fail, timeout or rate-limit requests.
-
-The project should therefore support:
-
-* retries
-* delays between requests
-* timeouts
-* local caching
-* safe failure
-* clear logging
-
-A temporary API failure must not corrupt an already completed block.
-
-Downloaded API data should be cached whenever practical so that a failed second attempt does not require downloading everything again.
-
-If repeated retries fail and required information cannot be verified, the current operation must stop safely.
+If information cannot be reliably verified, the system must flag the problem or stop the affected operation.
 
 ---
 
-# 18. CACHE
+# 19. Cache
 
-Large external datasets should not unnecessarily be downloaded again.
+`_Cache/` stores reusable temporary or downloaded information.
 
-The project should use:
+Examples:
+
+* API responses
+* Metadata responses
+* Downloaded pages
+* Temporary processing data
+* Cached datasets
+
+The system SHOULD reuse valid cache data.
+
+The system MUST NOT unnecessarily download the same large datasets repeatedly.
+
+If cached data is corrupted, the system may safely invalidate and recreate the affected cache.
+
+---
+
+# 20. Data
+
+`_Data/` contains structured project data.
+
+Examples:
 
 ```text
 _Data/
+├── IMDb/
+├── Anime/
+├── Databases/
+└── Processing/
 ```
 
-for:
+The exact internal structure may evolve as implementation progresses.
 
-* downloaded datasets
-* API caches
-* manifests
-* logs
-* temporary project metadata
-
-Cached data must be clearly separated from the actual media folders.
+The `_Data/` folder MUST remain separate from the media folders.
 
 ---
 
-# 19. BACKUPS
+# 21. Manifests
 
-Backups are mandatory.
+`_Manifests/` contains structured catalog information.
 
-The project must maintain:
+Examples:
 
 ```text
-_Backups/
+_Manifests/
+├── Movies_0001-1000.json
+├── Series_0001-1000.json
+├── Cartoons_0001-1000.json
+└── Anime_0001-1000.json
 ```
 
-separately from the active media library.
+Manifests may contain:
 
-A successful block should have a recoverable backup before the next block begins.
+* Ranking
+* Title
+* Year
+* External ID
+* Rating
+* Genre
+* Category
+* Verification status
+* Processing status
+
+Ranking information should be stored here rather than forced into user-facing folder names.
+
+---
+
+# 22. Logging
+
+`_Logs/` contains build and processing logs.
+
+Every significant build operation SHOULD produce a log.
+
+Logs should record:
+
+* Start time
+* End time
+* Block number
+* Data sources
+* Downloads
+* API calls
+* Retry attempts
+* Successful operations
+* Failed operations
+* Skipped items
+* Warnings
+* Final status
+
+A failed operation MUST leave enough information to diagnose the failure.
+
+---
+
+# 23. API Reliability
+
+External APIs can fail, timeout or rate-limit requests.
+
+The system MUST therefore use safe API handling.
+
+Where appropriate, it should support:
+
+* Retries
+* Delays between requests
+* Timeouts
+* Local caching
+* Clear error reporting
+* Safe failure
+
+A temporary API failure MUST NOT silently produce an incomplete catalog.
+
+If an API cannot provide required information after reasonable retries, the system must stop safely or flag the affected operation according to the block's verification rules.
+
+Previously cached valid information should not be destroyed simply because an API is temporarily unavailable.
+
+---
+
+# 24. Backups
+
+`_Backups/` contains safety copies.
 
 Example:
 
@@ -568,259 +675,186 @@ Example:
 _Backups/
 ├── Block_0001-1000/
 ├── Block_1001-2000/
-├── Block_2001-3000/
 └── ...
 ```
 
-The exact backup implementation may change later, but the principle must remain:
+A completed block SHOULD have a recoverable backup before the project moves to the next block.
 
-**A completed block must be recoverable.**
+Backups MUST be kept separate from the active media folders.
 
-The AI MUST NOT delete old verified backups unless the user explicitly requests it.
+The backup process MUST NOT delete the only available copy of important project data.
 
 ---
 
-# 20. LOGGING
+# 25. Duplicate Handling
 
-Every build operation must produce a log.
+Advanced duplicate management is intentionally postponed.
 
-Logs should contain, where applicable:
+The current system does not need a sophisticated duplicate-detection engine.
 
-* start time
-* end time
-* block number
-* source datasets
-* API requests
-* retry attempts
-* successful operations
-* failed operations
-* skipped items
-* generated manifests
-* backup status
-* final result
+However, the build process MUST avoid obviously creating the exact same folder twice during one operation.
 
-Logs should be stored under:
+Advanced duplicate detection can be added later.
+
+It MUST NOT become a reason to delay the current 0001–1000 implementation unless an actual data-integrity problem is discovered.
+
+---
+
+# 26. Verification
+
+Every block must be verified before the next block can start.
+
+Verification should check:
+
+* Correct folder structure
+* Correct category
+* Correct title
+* Correct ranking
+* Verified metadata
+* Verified seasons where applicable
+* Expected manifests
+* Expected logs
+* Backup availability
+* No fatal errors
+* No incomplete generation
+
+The result must be clearly marked as:
 
 ```text
-_Data/Logs/
+COMPLETE
 ```
 
-A failed build must leave enough information to understand what happened.
-
----
-
-# 21. MANIFESTS
-
-Each completed block should produce a manifest.
-
-The manifest should make it possible to determine:
-
-* ranking
-* title
-* category
-* source ID
-* metadata status
-* verification status
-* relevant season information
-
-Manifests should be stored under:
+or:
 
 ```text
-_Data/Manifests/
+FAILED
 ```
 
-The manifest is the authoritative catalog record for the build process.
+A block MUST NOT be treated as complete if the result is uncertain.
 
 ---
 
-# 22. DUPLICATES
+# 27. Failure Handling
 
-Advanced duplicate detection is intentionally postponed.
+If a build fails:
 
-The current project does NOT require a complex duplicate-management system.
+1. Stop the affected operation.
+2. Do not start the next block.
+3. Preserve the logs.
+4. Preserve useful cached data.
+5. Identify the cause.
+6. Fix the problem.
+7. Re-run the affected block safely.
+8. Verify the complete block again.
+9. Only then proceed.
 
-However, the build process should avoid obviously creating the exact same folder twice during the same operation.
+The system MUST NOT hide failures.
 
-A complete duplicate-management system may be designed later.
-
-The AI MUST NOT spend significant development effort on advanced duplicate handling unless explicitly requested.
+The system MUST NOT report success when the block is incomplete.
 
 ---
 
-# 23. CATEGORY RULES
+# 28. AI Development Rules
 
-The four media categories are:
+Any AI working on this repository MUST follow these rules.
+
+### MUST
+
+* Read the existing repository before changing code.
+* Read `docs/PROJECT_SPECIFICATION.md`.
+* Preserve the existing architecture unless a change is explicitly approved.
+* Work one 1,000-title block at a time.
+* Use the exact folder structure defined here.
+* Use verified information.
+* Maintain logs.
+* Maintain backups.
+* Fail safely.
+* Clearly report errors.
+* Keep changes reversible where practical.
+* Stop when requirements are ambiguous.
+
+### MUST NOT
+
+* Invent seasons.
+* Invent metadata.
+* Invent titles.
+* Change project scope without approval.
+* Start multiple blocks simultaneously.
+* Skip a failed block.
+* Automatically continue after verification failure.
+* Delete existing user data.
+* Modify unrelated folders.
+* Move production media during development.
+* Add Music, TV Channels or Recommendations without approval.
+* Add Anime Movies or OVAs without approval.
+* Rewrite working project components unnecessarily.
+
+---
+
+# 29. Ambiguity Rule
+
+If the specification does not provide enough information to make a safe decision, the AI MUST NOT guess.
+
+The correct action is:
 
 ```text
-Movies
-Series
-Cartoons
-Anime
+STOP
+↓
+Explain what is unclear
+↓
+Ask for clarification
+↓
+Wait for approval
+↓
+Continue
 ```
 
-Rules:
-
-### Movies
-
-Feature films and movie content within the current approved scope.
-
-### Series
-
-Normal non-anime television series.
-
-### Cartoons
-
-Western/non-anime animated television series.
-
-### Anime
-
-Anime television/series content.
-
-If classification is uncertain:
-
-**DO NOT GUESS.**
-
-Flag it for review.
+This rule takes priority over speed.
 
 ---
 
-# 24. NO UNAUTHORIZED SCOPE EXPANSION
+# 30. Change Control
 
-The AI must not decide on its own to add:
+Major architectural changes require explicit approval.
 
-* Music
-* TV Channels
-* Recommendations
-* Anime movies
-* OVAs
-* Specials
-* Advanced duplicate systems
-* Other categories
+Examples:
 
-The user must explicitly approve scope expansion.
+* Changing root folder structure
+* Adding new media categories
+* Changing the block size
+* Changing the metadata strategy
+* Moving the production library
+* Adding new automation systems
+* Changing how seasons are represented
 
----
-
-# 25. JELLYFIN COMPATIBILITY
-
-The project must be designed for Jellyfin.
-
-The structure should make it easy for Jellyfin to identify:
-
-* movies
-* series
-* seasons
-* episodes
-* titles
-* metadata
-
-The project should avoid unnecessary custom behavior that conflicts with normal Jellyfin library organization.
-
-The goal is:
-
-**Correct filesystem structure + correct metadata + Jellyfin handles presentation.**
+An AI must not make these changes silently.
 
 ---
 
-# 26. CLIENT COMPATIBILITY
+# 31. Production Migration
 
-The finished system should work well through supported Jellyfin clients on:
+`MediaLibrary_Test` is the development environment.
 
-* PC
-* mobile
-* tablet
-* NVIDIA Shield TV
-* other Jellyfin-compatible devices
+The project MUST NOT assume that it is the final production location.
 
-Offline downloading is a future feature and must not be treated as a required part of the current build.
+Production migration will happen only after the development environment has been fully tested.
 
----
+The migration must preserve:
 
-# 27. DEVELOPMENT SAFETY
+* Media structure
+* Metadata
+* Manifests
+* Logs
+* Backups
+* Jellyfin compatibility
 
-All development should initially occur in:
-
-```text
-Desktop\MediaLibrary_Test
-```
-
-or the explicitly approved equivalent.
-
-The AI must never assume that a folder is safe to delete.
-
-Before destructive operations, the AI must identify exactly what will be affected.
-
-The AI must not delete user media without explicit approval.
+Production migration is a separate future task.
 
 ---
 
-# 28. GITHUB REPOSITORY RULES
+# 32. Current Project State
 
-The GitHub repository is the source of truth for the project's code and documentation.
-
-The AI must:
-
-1. Read the repository before changing code.
-2. Read `README.md`.
-3. Read this specification.
-4. Inspect existing scripts and structure.
-5. Reuse working components where possible.
-6. Avoid unnecessary rewrites.
-7. Keep changes understandable.
-8. Explain important changes.
-9. Preserve existing functionality unless a change is explicitly required.
-
-Documentation should be kept synchronized with important project decisions.
-
----
-
-# 29. CHANGE CONTROL
-
-If an implementation decision conflicts with this specification, the AI must stop and identify the conflict.
-
-It must not silently choose one interpretation.
-
-The AI should state:
-
-```text
-CONFLICT DETECTED
-Current specification:
-...
-Requested implementation:
-...
-Action required:
-Clarification/approval
-```
-
-The user makes the final decision.
-
----
-
-# 30. REQUIRED BUILD WORKFLOW
-
-Every block should follow this general process:
-
-```text
-1. Read project specification
-2. Read existing repository
-3. Check current block status
-4. Check existing cache
-5. Check previous backup
-6. Collect required metadata
-7. Verify metadata
-8. Generate folders/manifests
-9. Generate logs
-10. Run validation
-11. Create backup
-12. Report results
-13. STOP
-```
-
-The process must NOT automatically begin the next block.
-
----
-
-# 31. FIRST BLOCK
+The current project is in the **development and specification phase**.
 
 The immediate target is:
 
@@ -828,172 +862,51 @@ The immediate target is:
 Block 0001–1000
 ```
 
-The first block must be completed independently.
-
-The AI must not start:
-
-```text
-1001–2000
-```
-
-until Block 0001–1000 has been explicitly confirmed as:
-
-**100% complete, verified and backed up.**
+No later block should be generated until Block 0001–1000 has been fully completed and verified.
 
 ---
 
-# 32. NEXT BLOCK RULE
+# 33. Future Features
 
-After Block 0001–1000 is complete, the next permitted block is:
-
-```text
-1001–2000
-```
-
-After Block 1001–2000 is complete:
-
-```text
-2001–3000
-```
-
-Then:
-
-```text
-3001–4000
-4001–5000
-5001–6000
-6001–7000
-7001–8000
-8001–9000
-9001–10000
-```
-
-No block may be skipped.
-
-No blocks may be merged.
-
-No blocks may be processed in parallel.
-
----
-
-# 33. VERIFICATION CHECKLIST
-
-Before declaring a block complete, verify:
-
-* [ ] Correct block range
-* [ ] Correct number of intended entries
-* [ ] Correct categories
-* [ ] Human-readable titles
-* [ ] No invented seasons
-* [ ] No unapproved media types
-* [ ] Required metadata available
-* [ ] Required manifests generated
-* [ ] Logs generated
-* [ ] No critical errors
-* [ ] Backup completed
-* [ ] Test folder remains intact
-* [ ] Jellyfin-compatible structure maintained
-
-If any critical item fails, the block is NOT complete.
-
----
-
-# 34. COMPLETION STATUS
-
-A block may only be marked:
-
-```text
-COMPLETE
-```
-
-when all required verification and backup requirements have passed.
-
-Possible statuses are:
-
-```text
-NOT_STARTED
-IN_PROGRESS
-WAITING_FOR_REVIEW
-FAILED
-VERIFIED
-BACKED_UP
-COMPLETE
-```
-
-The AI must not mark an incomplete block as COMPLETE.
-
----
-
-# 35. USER APPROVAL GATE
-
-The user has final authority over moving from one block to the next.
-
-Even if the AI believes a block is complete, it must not automatically start the next block.
-
-The correct sequence is:
-
-```text
-Block finished
-        ↓
-Validation
-        ↓
-Backup
-        ↓
-Report
-        ↓
-STOP
-        ↓
-User approval
-        ↓
-Next block
-```
-
----
-
-# 36. FUTURE FEATURES
-
-Potential future features include:
+Future features may include:
 
 * Offline downloads
 * Advanced duplicate detection
-* More sophisticated metadata handling
-* Automatic media-file importing
-* Automatic episode renaming
+* More advanced metadata management
+* Automatic episode-file organization
 * Additional Jellyfin automation
+* Production migration
 * Additional media categories
-* Larger catalog sizes
 
-These features are intentionally postponed.
-
-They must not be implemented automatically.
+Future features MUST remain outside the current scope until explicitly approved.
 
 ---
 
-# 37. CORE PRINCIPLE
+# 34. Final Development Principle
 
-The project follows this principle:
+The project must always follow this sequence:
 
 ```text
-CLEAN STRUCTURE
-      ↓
-VERIFIED DATA
-      ↓
-SAFE BUILD
-      ↓
-LOGGING
-      ↓
+PLAN
+↓
+BUILD ONE BLOCK
+↓
+VALIDATE
+↓
+VERIFY
+↓
+LOG
+↓
 BACKUP
-      ↓
-VERIFICATION
-      ↓
-USER APPROVAL
-      ↓
-NEXT 1000-TITLE BLOCK
+↓
+CONFIRM 100% COMPLETE
+↓
+ONLY THEN START NEXT BLOCK
 ```
 
-The project is not simply trying to generate thousands of folders.
+The project is not designed to maximize speed.
 
-The objective is to create a **clean, reliable, maintainable and Jellyfin-ready personal media library** that can grow safely from:
+It is designed to create a clean, reliable, maintainable and Jellyfin-ready media library that can safely grow from:
 
 ```text
 0001–1000
@@ -1002,35 +915,21 @@ The objective is to create a **clean, reliable, maintainable and Jellyfin-ready 
 to:
 
 ```text
-10000+
+1001–2000
 ```
 
-without sacrificing organization, correctness or recoverability.
+then:
 
----
+```text
+2001–3000
+```
 
-# 38. FINAL AI RULE
+and eventually:
 
-If there is any uncertainty about:
+```text
+9001–10000
+```
 
-* title
-* category
-* season
-* metadata
-* folder structure
-* block status
-* backup status
-* scope
-* destructive action
+without sacrificing organization or data integrity.
 
-the AI must **STOP and ask**.
-
-It must never invent an answer simply to keep the build moving.
-
-**Correctness is more important than speed.**
-
-**Safety is more important than automation.**
-
-**Verification is required before progression.**
-
-**One block at a time.**
+**No block is considered complete until it has been verified and backed up.**
