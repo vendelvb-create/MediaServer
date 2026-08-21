@@ -12,7 +12,15 @@ def test_safe_path_accepts_path_inside_root():
     assert safe_path(candidate) == candidate.resolve()
 
 
-def test_safe_path_rejects_path_outside_root():
+def test_safe_path_resolves_relative_path_from_test_root():
+    root = get_test_root()
+
+    result = safe_path("Movies")
+
+    assert result == (root / "Movies").resolve()
+
+
+def test_safe_path_rejects_absolute_path_outside_root():
     outside = Path.home() / "Documents"
 
     with pytest.raises(ValueError):
