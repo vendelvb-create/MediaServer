@@ -7,7 +7,7 @@ def get_test_root() -> Path:
 
     All filskriving i testfasen skal holdes innenfor denne katalogen.
     """
-    return (Path.home() / "Desktop" / "Medialibrary_test").resolve()
+    return (Path.home() / "Desktop" / "MediaLibrary_Test").resolve()
 
 
 def safe_path(path: str | Path) -> Path:
