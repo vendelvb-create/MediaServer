@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import os
 
 from path_safety import safe_path
 
@@ -69,20 +70,43 @@ def load_state() -> dict:
 
 
 def save_state(state: dict) -> None:
-    """Lagrer blokkstatus."""
+    """Lagrer blokkstatus atomisk."""
     if not isinstance(state, dict):
         raise ValueError("Block state must be a dictionary.")
 
     state_file = get_state_file()
     state_file.parent.mkdir(parents=True, exist_ok=True)
 
-    with state_file.open("w", encoding="utf-8") as file:
-        json.dump(
-            state,
-            file,
-            indent=2,
-            ensure_ascii=False,
-        )
+    # Write to a temporary file first, then replace atomically.
+    # This prevents a truncated or corrupted state file if the
+    # process is interrupted during the write.
+    tmp_file = state_file.with_name(state_file.name + ".tmp")
+
+    try:
+        with tmp_file.open("w", encoding="utf-8") as file:
+            json.dump(
+                state,
+                file,
+                indent=2,
+                ensure_ascii=False,
+            )
+            file.flush()
+            # Ensure data is on disk before the replace.
+            os.fsync(file.fileno())
+
+        # Atomic replace: either the old file remains or the new
+        # complete file is in place. The previous valid state is
+        # not destroyed if the write above failed.
+        tmp_file.replace(state_file)
+    except Exception:
+        # Clean up temporary file on any failure so we do not leave
+        # partial artifacts behind when possible.
+        if tmp_file.exists():
+            try:
+                tmp_file.unlink()
+            except OSError:
+                pass
+        raise
 
 
 def _get_blocks(state: dict) -> dict:
