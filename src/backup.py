@@ -47,3 +47,72 @@ def create_backup(source: str | Path) -> Path:
     )
 
     return backup_path
+
+
+def restore_backup(
+    backup: str | Path,
+    destination: str | Path,
+) -> Path:
+    """
+    Gjenoppretter en backup til en eksplisitt angitt destination.
+
+    Restore er konservativ:
+    - backup må ligge under _Backups/
+    - destination må ligge under testroten
+    - _Backups kan ikke brukes som destination
+    - eksisterende destination avvises
+    - ingen eksisterende eller ukjente filer slettes automatisk
+    """
+
+    backup_path = safe_path(backup)
+    destination_path = safe_path(destination)
+
+    backup_root = safe_path("_Backups")
+
+    if not backup_path.exists():
+        raise FileNotFoundError(
+            f"Backup not found: {backup_path}"
+        )
+
+    if not backup_path.is_dir():
+        raise ValueError(
+            f"Backup source must be a directory: {backup_path}"
+        )
+
+    if not backup_path.is_relative_to(backup_root):
+        raise ValueError(
+            f"Restore source must be inside backup root: {backup_path}"
+        )
+
+    if backup_path == backup_root:
+        raise ValueError(
+            "Restore source cannot be the backup root"
+        )
+
+    if destination_path == backup_root:
+        raise ValueError(
+            "Restore destination cannot be the backup root"
+        )
+
+    if destination_path.is_relative_to(backup_root):
+        raise ValueError(
+            f"Restore destination cannot be inside backup root: "
+            f"{destination_path}"
+        )
+
+    if destination_path.exists():
+        raise FileExistsError(
+            f"Restore destination already exists: {destination_path}"
+        )
+
+    destination_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    shutil.copytree(
+        backup_path,
+        destination_path,
+    )
+
+    return destination_path
