@@ -39,4 +39,4 @@ def test_safe_path_rejects_parent_traversal():
 )
 def test_safe_path_rejects_windows_parent_traversal():
     with pytest.raises(ValueError):
-        safe_path(r"..\\..\\Windows\\System32")
+        safe_path(r"..\..\Windows\System32")
