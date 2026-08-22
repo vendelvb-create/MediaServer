@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -32,6 +33,10 @@ def test_safe_path_rejects_parent_traversal():
         safe_path("../outside")
 
 
+@pytest.mark.skipif(
+    sys.platform != "win32",
+    reason="Windows-style backslash path separators are only meaningful on Windows",
+)
 def test_safe_path_rejects_windows_parent_traversal():
     with pytest.raises(ValueError):
-        safe_path(r"..\..\Windows\System32")
+        safe_path(r"..\\..\\Windows\\System32")
