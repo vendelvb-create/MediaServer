@@ -35,16 +35,27 @@ def create_backup(source: str | Path) -> Path:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
 
     backup_path = backup_root / f"backup_{timestamp}"
+    # Write to a temporary name first so an interrupted/failed copy
+    # cannot leave a final-named directory that looks complete.
+    tmp_path = backup_root / f".tmp_backup_{timestamp}"
 
     backup_path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    shutil.copytree(
-        source_path,
-        backup_path,
-    )
+    try:
+        shutil.copytree(
+            source_path,
+            tmp_path,
+        )
+        # Atomic rename on the same filesystem: only successful
+        # backups receive the final backup_* name.
+        tmp_path.rename(backup_path)
+    except Exception:
+        if tmp_path.exists():
+            shutil.rmtree(tmp_path, ignore_errors=True)
+        raise
 
     return backup_path
 
