@@ -287,3 +287,105 @@ def test_restore_backup_rejects_parent_traversal_destination():
             "_Backups/backup_example",
             "../_Unsafe_Restore",
         )
+
+
+def test_create_backup_cleans_partial_on_failure():
+    """A failed backup must not leave a final-named backup_* directory."""
+    from unittest.mock import patch
+
+    root = get_test_root()
+    source = root / "_Test_Backup_Fail_Source"
+    source.mkdir(parents=True, exist_ok=True)
+    (source / "data.txt").write_text("data", encoding="utf-8")
+
+    backup_root = safe_path("_Backups")
+    before_backups = set(backup_root.glob("backup_*"))
+    before_tmps = set(backup_root.glob(".tmp_backup_*"))
+
+    try:
+        with patch("backup.shutil.copytree", side_effect=OSError("simulated interrupt")):
+            with pytest.raises(OSError, match="simulated interrupt"):
+                create_backup(source)
+
+        after_backups = set(backup_root.glob("backup_*"))
+        after_tmps = set(backup_root.glob(".tmp_backup_*"))
+
+        # No new final-named backup must appear
+        assert after_backups == before_backups
+        # Temporary work directory must be cleaned up
+        assert after_tmps == before_tmps
+
+    finally:
+        if source.exists():
+            shutil.rmtree(source)
+        # Safety cleanup of any leftover tmp from a broken implementation
+        for p in backup_root.glob(".tmp_backup_*"):
+            if p.is_dir():
+                shutil.rmtree(p, ignore_errors=True)
+
+
+def test_create_backup_atomic_success_leaves_only_final_name():
+    """Successful backup appears only under the final backup_* name."""
+    root = get_test_root()
+    source = root / "_Test_Backup_Atomic_Source"
+    source.mkdir(parents=True, exist_ok=True)
+    (source / "ok.txt").write_text("ok", encoding="utf-8")
+
+    backup_root = safe_path("_Backups")
+    before_tmps = set(backup_root.glob(".tmp_backup_*"))
+
+    backup_path = None
+    try:
+        backup_path = create_backup(source)
+
+        assert backup_path.exists()
+        assert backup_path.is_dir()
+        assert backup_path.name.startswith("backup_")
+        assert (backup_path / "ok.txt").read_text(encoding="utf-8") == "ok"
+
+        # No temporary names left behind after success
+        after_tmps = set(backup_root.glob(".tmp_backup_*"))
+        assert after_tmps == before_tmps
+
+    finally:
+        if source.exists():
+            shutil.rmtree(source)
+        if backup_path is not None and backup_path.exists():
+            shutil.rmtree(backup_path)
+
+
+def test_create_backup_preserves_existing_valid_backup_on_failure():
+    """A failure during a new backup must not destroy previous valid backups."""
+    from unittest.mock import patch
+
+    root = get_test_root()
+    source = root / "_Test_Backup_Preserve_Source"
+    source.mkdir(parents=True, exist_ok=True)
+    (source / "data.txt").write_text("data", encoding="utf-8")
+
+    # Create one valid backup first
+    existing_backup = create_backup(source)
+    assert existing_backup.exists()
+
+    backup_root = safe_path("_Backups")
+    before = set(backup_root.glob("backup_*"))
+
+    try:
+        with patch("backup.shutil.copytree", side_effect=OSError("disk full")):
+            with pytest.raises(OSError):
+                create_backup(source)
+
+        after = set(backup_root.glob("backup_*"))
+        assert existing_backup in after
+        assert after == before
+        assert existing_backup.exists()
+        assert (existing_backup / "data.txt").read_text(encoding="utf-8") == "data"
+
+    finally:
+        if source.exists():
+            shutil.rmtree(source)
+        if existing_backup.exists():
+            shutil.rmtree(existing_backup)
+        for p in backup_root.glob(".tmp_backup_*"):
+            if p.is_dir():
+                shutil.rmtree(p, ignore_errors=True)
