@@ -337,3 +337,67 @@ def test_approved_block_cannot_be_started_again():
             block_id,
             user_approved=True,
         )
+
+
+def test_save_state_is_atomic_and_leaves_no_tmp():
+    """Normal atomic save must leave a valid JSON file and no leftover .tmp."""
+    state = {
+        "blocks": {
+            "0001-1000": {
+                "state": RUNNING,
+            }
+        }
+    }
+
+    save_state(state)
+
+    state_file = get_state_file()
+    tmp_file = state_file.with_name(state_file.name + ".tmp")
+
+    assert state_file.exists()
+    assert not tmp_file.exists()
+    assert load_state() == state
+    # Ensure the file content is valid JSON
+    assert json.loads(state_file.read_text(encoding="utf-8")) == state
+
+
+def test_failed_write_does_not_destroy_previous_state(monkeypatch):
+    """
+    If writing the new state fails, the previous valid state file
+    must remain intact and loadable.
+    """
+    original = {
+        "blocks": {
+            "0001-1000": {
+                "state": COMPLETED,
+            }
+        }
+    }
+    save_state(original)
+
+    state_file = get_state_file()
+    assert load_state() == original
+
+    def failing_dump(*args, **kwargs):
+        raise OSError("Simulated write failure during json.dump")
+
+    monkeypatch.setattr(json, "dump", failing_dump)
+
+    with pytest.raises(OSError):
+        save_state(
+            {
+                "blocks": {
+                    "0001-1000": {
+                        "state": FAILED,
+                    }
+                }
+            }
+        )
+
+    # Previous valid state must still be present and unchanged.
+    assert state_file.exists()
+    assert load_state() == original
+
+    tmp_file = state_file.with_name(state_file.name + ".tmp")
+    # Temporary file should have been cleaned up on failure.
+    assert not tmp_file.exists()
