@@ -137,7 +137,7 @@ class BuildLog:
         Feilen blir lagret umiddelbart, og siste kjente timestamp
         beholdes selv om operasjonen ikke avsluttes normalt.
         """
-        self.errors.append(error)
+        self.errors.append(str(error))
         self.final_result = "FAILED"
 
         if self.end_time is None:
@@ -158,9 +158,7 @@ class BuildLog:
         self.verification_result = str(result)
 
     def to_text(self) -> str:
-        """
-        Returnerer hele build-loggen i menneskelesbart format.
-        """
+        """Returnerer hele build-loggen i menneskelesbart format."""
         errors = (
             "\n".join(
                 f"  - {error}"
@@ -278,11 +276,13 @@ def log_build_failure(
     error: str,
 ) -> Path:
     """
-    Registrerer kritisk feil og skriver failure-loggen.
+    Skriver en failure-logg.
 
-    Dette sikrer at feil blir bevart selv når en build stopper
-    før normal avslutning.
+    BuildLog.fail() skal allerede være utført av kalleren.
+    Denne funksjonen skal derfor ikke registrere samme feil på nytt.
     """
-    build_log.fail(error)
+
+    if not build_log.errors:
+        build_log.fail(error)
 
     return build_log.write()

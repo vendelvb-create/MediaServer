@@ -6,17 +6,25 @@ from block_state import (
     APPROVED,
     BACKED_UP,
     COMPLETED,
+    FAILED,
     RUNNING,
     VERIFIED,
+    VERIFYING,
     approve_block,
     begin_verification,
     complete_block,
+    fail_block,
     get_block_state,
     mark_backup_completed,
     start_block,
     verify_block,
 )
-from logger import BuildLog, log_build_complete, log_build_failure, start_build_log
+from logger import (
+    BuildLog,
+    log_build_complete,
+    log_build_failure,
+    start_build_log,
+)
 
 
 class BuildWorkflowError(RuntimeError):
@@ -34,13 +42,14 @@ def run_build_workflow(
     Kjører én kontrollert block-workflow.
 
     Rekkefølge:
+
         USER APPROVAL
         -> BUILD
         -> LOG
         -> VERIFY
         -> BACKUP
 
-    APPROVED håndteres separat og krever en eksplisitt
+    APPROVED håndteres separat og krever eksplisitt
     brukerhandling via approve_completed_block().
 
     Workflowen starter aldri neste blokk automatisk.
@@ -79,11 +88,10 @@ def run_build_workflow(
         verification_passed = verification_operation()
 
         if not verification_passed:
-            from block_state import fail_block
-
             fail_block(block_id)
 
             build_log.set_verification_result("FAILED")
+
             return _write_failure_log(
                 build_log,
                 f"Verification failed for block {block_id}.",
@@ -111,15 +119,8 @@ def run_build_workflow(
             )
 
         build_log.set_verification_result("VERIFIED")
-        build_log.final_result = "SUCCESS"
 
-        log_build_complete(
-            build_log,
-            final_result="SUCCESS",
-            verification_result="VERIFIED",
-        )
-
-        return build_log
+        return _write_success_log(build_log)
 
     except Exception as exc:
         _fail_block_if_possible(block_id)
@@ -133,8 +134,6 @@ def run_build_workflow(
 def approve_completed_block(block_id: str) -> str:
     """
     Utfører eksplisitt bruker-godkjenning av en ferdig backupet blokk.
-
-    Dette er en separat operasjon med vilje.
 
     Workflowen godkjenner aldri automatisk en blokk og starter
     aldri neste blokk automatisk.
@@ -163,14 +162,18 @@ def _fail_block_if_possible(block_id: str) -> None:
     Forsøker å markere en pågående blokk som FAILED.
 
     En allerede terminal blokk endres ikke.
+
+    Den opprinnelige feilen skal alltid bevares dersom
+    state-håndteringen selv skulle feile.
     """
 
     try:
-        from block_state import FAILED, VERIFYING, fail_block
-
         current_state = get_block_state(block_id)
 
-        if current_state in {RUNNING, VERIFYING}:
+        if current_state in {
+            RUNNING,
+            VERIFYING,
+        }:
             fail_block(block_id)
 
         elif current_state == FAILED:
@@ -185,15 +188,37 @@ def _fail_block_if_possible(block_id: str) -> None:
             return
 
     except Exception:
-        # Den opprinnelige feilen skal bevares.
         return
+
+
+def _write_success_log(build_log: BuildLog) -> BuildLog:
+    """Avslutter og skriver en vellykket build-logg."""
+
+    build_log.finish(
+        final_result="SUCCESS",
+        verification_result="VERIFIED",
+    )
+
+    log_build_complete(
+        build_log,
+        final_result="SUCCESS",
+        verification_result="VERIFIED",
+    )
+
+    return build_log
 
 
 def _write_failure_log(
     build_log: BuildLog,
     error: str,
 ) -> BuildLog:
-    """Registrerer og skriver en failure-logg."""
+    """
+    Registrerer og skriver én failure-logg.
+
+    build_log.fail() utføres kun her.
+    log_build_failure() skriver deretter den allerede oppdaterte
+    BuildLog-en uten å registrere samme feil på nytt.
+    """
 
     build_log.fail(error)
 
