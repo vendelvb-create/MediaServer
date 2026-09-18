@@ -9,7 +9,7 @@ WINDOWS_DEFAULT_ROOT = Path(r"D:\MediaServer")
 
 
 def get_media_root() -> Path:
-    """
+    r"""
     Return the active MediaServer root.
 
     Production on Windows defaults to D:\MediaServer.
