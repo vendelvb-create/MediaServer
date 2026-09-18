@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def isolated_mediaserver_root(tmp_path, monkeypatch):
-    """
+    r"""
     Every test runs against an isolated temporary MediaServer root.
 
     This is a hard safety barrier: tests never write to the real D:\MediaServer.
