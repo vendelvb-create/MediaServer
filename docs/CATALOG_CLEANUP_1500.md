@@ -413,3 +413,32 @@ Preserved:
 - actual media files
 
 The workspace is now cleaned of old cleanup clutter while retaining a single recoverable archive.
+
+
+### Golden baseline v1.1 — VERIFIED 2026-09-18
+
+A read-only golden baseline was captured after cleanup completion and its reporting metadata was repaired/verified in v1.1.
+
+Verified baseline:
+
+- Movies: **1497**
+- Series: **1285**
+- Anime: **1378**
+- Cartoons: **114**
+- Total folders: **4274**
+- Non-empty folders: **0**
+- Inventory SHA256: `E9FBE961FFC38E6CE90688B3CB8C8F6E7E379CD35ECAD79AF4ED3B7C36A9D1E9`
+- Inventory hash verified: **true**
+
+Cleanup archive verification:
+
+- archive: `MediaServer_cleanup_history_20260918_224733.zip`
+- readable: **true**
+- entries: **163**
+- archive SHA256: `F2DE8F07BF3DC1AD00BAA810BFB9B1D70F95D483554021BA74AAE34B874F72B7`
+
+One harmless empty housekeeping directory remains for optional removal:
+
+- `Backups\GlobalMicroFixV2`
+
+The golden baseline is ready to be backed up into the repository before the controlled fill/rebuild phase starts.
