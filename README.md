@@ -157,23 +157,33 @@ Mapper som begynner med _ er interne system-/administrasjonsmapper og skal ikke 
 
 📦 Blokkbasert katalogbygging
 
-Mediekatalogen skal bygges kontrollert i blokker på 1 000 titler.
+Mediekatalogen skal nå bygges og ryddes kontrollert i blokker på 500 titler.
 
-Første blokk er:
+Første Top-1500-milepæl behandles som:
 
-0001–1000
+0001–0500
+0501–1000
+1001–1500
 
 Deretter:
 
-1001–2000
-2001–3000
-3001–4000
-4001–5000
-5001–6000
-6001–7000
-7001–8000
-8001–9000
-9001–10000
+1501–2000
+2001–2500
+2501–3000
+3001–3500
+3501–4000
+4001–4500
+4501–5000
+5001–5500
+5501–6000
+6001–6500
+6501–7000
+7001–7500
+7501–8000
+8001–8500
+8501–9000
+9001–9500
+9501–10000
 
 Samme mønster kan fortsette dersom prosjektet senere utvides.
 
@@ -1085,41 +1095,35 @@ Disse dokumentene skal ikke inneholde motstridende krav.
 
 📌 Nåværende prosjektstatus
 
-Prosjektet er i forberedelses- og scaffoldingfasen.
+Prosjektet er nå i aktiv katalog-opprydding og kontrollert Top-1500-bygging.
 
-Følgende er definert:
+Siste verifiserte folderstatus fra cleanup-runden 16.09.2026:
 
-Prosjektmål
+Movies: 1500
 
-Første bibliotekversjon
+Series: 1287
 
-Testmiljø
+Anime: 1560
 
-Godkjent mappestruktur
+Cartoons: 112
 
-Blokkbasert utvikling
+De genererte mediemappene er fortsatt tomme, så strukturarbeidet kan gjennomføres uten å påvirke faktiske mediefiler.
 
-Sikkerhetskrav
+Arbeidet skjer nå i 500-title batches:
 
-Logging
+0001–0500
 
-Backup
+0501–1000
 
-Cache
+1001–1500
 
-Manifests
+Deretter fortsetter samme mønster i 500-blokker mot 10 000 per kategori.
 
-API-feilhåndtering
+Gjeldende cleanup-plan og beslutninger finnes i:
 
-Jellyfin-struktur
+docs/CATALOG_CLEANUP_1500.md
 
-Roadmap
-
-Selve massebyggingen av katalogen er ikke startet.
-
-Block 0001–1000 er ikke startet.
-
-Ingen senere blokk skal startes før tidligere blokk er ferdig bygget, verifisert, sikkerhetskopiert og godkjent.
+Ingen senere batch skal startes før forrige batch er previewet, kontrollert, kjørt, inventarisert og verifisert.
 
 🏁 Sluttmål
 
