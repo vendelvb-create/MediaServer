@@ -1,8 +1,8 @@
 # Catalog Cleanup — Top 1500 Baseline
 
-**Status:** Active cleanup plan  
+**Status:** CLEANUP COMPLETE — ready for controlled fill/rebuild  
 **Approved working root:** `D:\MediaServer`  
-**Last verified folder counts:** Movies 1497, Series 1285, Anime 1379, Cartoons 114 (2026-09-18)  
+**Last verified folder counts:** Movies 1497, Series 1285, Anime 1378, Cartoons 114 (2026-09-18)  
 **Media-file state:** The generated media folders are currently empty; cleanup operates on folder structure only.
 
 ## Goal
@@ -330,6 +330,54 @@ Verification:
 
 The 114-folder Cartoon baseline is now considered structurally cleaned and **LOCKED**.
 
-## Next phase
+### Global final audit + micro-fix — VERIFIED / CLEANUP COMPLETE 2026-09-18
 
-Run one global cross-category final audit across Movies / Series / Anime / Cartoons. If clean, mark the cleanup phase complete and begin the controlled fill/rebuild phase toward 1500 in each category.
+Global Final Audit v1 verified the cleaned library across all four categories.
+
+Audit result before micro-fix:
+
+- Movies: 1497
+- Series: 1285
+- Anime: 1379
+- Cartoons: 114
+- total: 4275
+- count mismatches: 0
+- non-empty folders: 0
+- within-category exact duplicate groups: 0
+
+The audit found one final strict-normalized duplicate in Anime:
+
+- deleted `Seitokai Yakuindomo_ OVA`
+- kept canonical `Seitokai Yakuindomo OVA`
+
+Global Micro-Fix v2 verification:
+
+- preview safe actions: 1
+- blocked actions: 0
+- plan SHA256 matched exactly
+- result: `DELETED_EMPTY_DUPLICATE` = 1
+- Movies after: **1497**
+- Series after: **1285**
+- Anime after: **1378**
+- Cartoons after: **114**
+- all other global review items remained untouched
+
+The cleanup phase is now **COMPLETE**.
+
+## Next phase — controlled fill/rebuild to Top 1500
+
+Fill verified gaps without modifying existing cleaned folders:
+
+- Movies: 1497 → **1500** (+3)
+- Series: 1285 → **1500** (+215)
+- Anime: 1378 → **1500** (+122)
+- Cartoons: 114 → **1500** (+1386)
+
+Rules for the fill phase:
+
+- correctness over count
+- no filler titles
+- no automatic modification of non-empty folders
+- use 500-title batches where practical
+- preview → review → build/fix → inventory → verify
+- once 1500/1500/1500/1500 is verified, create a golden baseline snapshot before adding media
