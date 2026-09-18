@@ -1,122 +1,31 @@
-﻿# Python cache
+# MediaServer
+
+# Python
 __pycache__/
 **/__pycache__/
 *.py[cod]
-# MediaServer - Git ignore rules
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
 
-# ============================================================
-# Local test environment
-# ============================================================
-
-MediaLibrary_Test/
-**/MediaLibrary_Test/
-
-# ============================================================
-# Media files
-# Media should never be stored in the Git repository
-# ============================================================
-
-*.mkv
-*.mp4
-*.avi
-*.mov
-*.m4v
-*.ts
-*.iso
-*.ogv
-*.webm
-*.wmv
-*.flv
-*.mpeg
-*.mpg
-
-# ============================================================
-# Media library folders
-# ============================================================
-
-Movies/
-Series/
-Cartoons/
-Anime/
-
-**/Movies/
-**/Series/
-**/Cartoons/
-**/Anime/
-
-# ============================================================
-# Project cache
-# ============================================================
-
-_Cache/
-**/_Cache/
-MediaLibrary_Test/_Cache/
-**/MediaLibrary_Test/_Cache/
-
-# ============================================================
-# Generated project data
-# ============================================================
-
-_Data/
-**/_Data/
-MediaLibrary_Test/_Data/
-**/MediaLibrary_Test/_Data/
-
-# ============================================================
-# Generated manifests
-# ============================================================
-
-_Manifests/
-**/_Manifests/
-MediaLibrary_Test/_Manifests/
-**/MediaLibrary_Test/_Manifests/
-
-# ============================================================
-# Backups
-# ============================================================
-
-_Backups/
-**/_Backups/
-MediaLibrary_Test/_Backups/
-**/MediaLibrary_Test/_Backups/
-
-# ============================================================
-# Logs
-# ============================================================
-
-_Logs/
-**/_Logs/
-*.log
-*.tmp
-
-# ============================================================
-# Local development files
-# ============================================================
-
+# Local environments / secrets
 .env
 .env.*
 !.env.example
 .local
-
-# ============================================================
-# IDE / editor files
-# ============================================================
-
 .vscode/
 .idea/
 
-# ============================================================
-# Operating system files
-# ============================================================
-
+# Operating-system clutter
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# ============================================================
 # Temporary files
-# ============================================================
-
+*.tmp
 *.temp
 *.temporary
 *.bak
@@ -124,26 +33,60 @@ desktop.ini
 *.swp
 *~
 
-# ============================================================
-# Python test / coverage files
-# ============================================================
+# Media files must never be committed
+*.mkv
+*.mp4
+*.avi
+*.mov
+*.m4v
+*.ts
+*.m2ts
+*.iso
+*.img
+*.ogv
+*.webm
+*.wmv
+*.flv
+*.mpeg
+*.mpg
+*.mp3
+*.flac
+*.wav
+*.m4a
+*.aac
+*.ogg
 
-.pytest_cache/
-.coverage
-htmlcov/
+# Local media-library roots
+Movies/
+Series/
+Cartoons/
+Anime/
+**/Movies/
+**/Series/
+**/Cartoons/
+**/Anime/
 
-# ============================================================
-# Build / distribution files
-# ============================================================
+# Current D:\MediaServer generated/runtime data
+CACHE/
+Data/
+Backups/
+Logs/
+Manifests/
 
-build/
-dist/
-*.egg-info/
+# Legacy test-environment generated/runtime data
+_Cache/
+_Data/
+_Backups/
+_Logs/
+_Manifests/
+MediaLibrary_Test/
+**/MediaLibrary_Test/
 
-# ============================================================
+# Generated archives and logs
+*.zip
+*.log
+
 # Local databases
-# ============================================================
-
 *.db
 *.sqlite
 *.sqlite3

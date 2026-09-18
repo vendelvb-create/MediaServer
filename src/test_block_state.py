@@ -24,7 +24,7 @@ from block_state import (
     start_block,
     transition_block,
 )
-from path_safety import get_test_root
+from path_safety import get_media_root
 
 
 @pytest.fixture(autouse=True)
@@ -40,11 +40,11 @@ def clean_state_file():
         state_file.unlink()
 
 
-def test_get_state_file_is_inside_test_root():
+def test_get_state_file_is_inside_media_root():
     state_file = get_state_file()
 
     assert state_file.resolve().is_relative_to(
-        get_test_root().resolve()
+        get_media_root().resolve()
     )
     assert state_file.name == "block_state.json"
 
@@ -60,7 +60,7 @@ def test_load_state_returns_empty_dict_when_missing():
 
 def test_save_and_load_state():
     state = {
-        "block": "0001-1000",
+        "block": "0001-0500",
         "status": "complete",
     }
 
@@ -89,40 +89,40 @@ def test_save_state_creates_parent_directory():
 
 
 def test_new_block_defaults_to_not_started():
-    assert get_block_state("0001-1000") == NOT_STARTED
+    assert get_block_state("0001-0500") == NOT_STARTED
 
 
 def test_first_block_requires_explicit_user_approval():
     assert can_start_block(
-        "0001-1000",
+        "0001-0500",
         user_approved=False,
     ) is False
 
     with pytest.raises(ValueError):
         start_block(
-            "0001-1000",
+            "0001-0500",
             user_approved=False,
         )
 
-    assert get_block_state("0001-1000") == NOT_STARTED
+    assert get_block_state("0001-0500") == NOT_STARTED
 
 
 def test_first_block_can_start_with_explicit_user_approval():
     assert can_start_block(
-        "0001-1000",
+        "0001-0500",
         user_approved=True,
     ) is True
 
     assert start_block(
-        "0001-1000",
+        "0001-0500",
         user_approved=True,
     ) == RUNNING
 
-    assert get_block_state("0001-1000") == RUNNING
+    assert get_block_state("0001-0500") == RUNNING
 
 
 def test_block_follows_required_state_sequence():
-    block_id = "0001-1000"
+    block_id = "0001-0500"
 
     assert start_block(
         block_id,
@@ -142,7 +142,7 @@ def test_block_follows_required_state_sequence():
 
 
 def test_invalid_state_transition_is_rejected():
-    block_id = "0001-1000"
+    block_id = "0001-0500"
 
     with pytest.raises(ValueError):
         transition_block(
@@ -154,7 +154,7 @@ def test_invalid_state_transition_is_rejected():
 
 
 def test_failed_block_cannot_continue():
-    block_id = "0001-1000"
+    block_id = "0001-0500"
 
     start_block(
         block_id,
@@ -171,8 +171,8 @@ def test_failed_block_cannot_continue():
 
 
 def test_next_block_cannot_start_before_previous_block_is_approved():
-    first_block = "0001-1000"
-    second_block = "1001-2000"
+    first_block = "0001-0500"
+    second_block = "0501-1000"
 
     start_block(
         first_block,
@@ -194,8 +194,8 @@ def test_next_block_cannot_start_before_previous_block_is_approved():
 
 
 def test_next_block_can_start_after_previous_block_is_approved():
-    first_block = "0001-1000"
-    second_block = "1001-2000"
+    first_block = "0001-0500"
+    second_block = "0501-1000"
 
     start_block(
         first_block,
@@ -223,7 +223,7 @@ def test_next_block_can_start_after_previous_block_is_approved():
 
 
 def test_user_approval_alone_cannot_bypass_previous_block():
-    second_block = "1001-2000"
+    second_block = "0501-1000"
 
     assert can_start_block(
         second_block,
@@ -248,7 +248,7 @@ def test_invalid_block_id_is_rejected():
 
     with pytest.raises(ValueError):
         can_start_block(
-            "1001-1999",
+            "0501-0999",
             user_approved=True,
         )
 
@@ -289,7 +289,7 @@ def test_invalid_state_value_is_rejected():
     save_state(
         {
             "blocks": {
-                "0001-1000": {
+                "0001-0500": {
                     "state": "INVALID_STATE",
                 }
             }
@@ -297,11 +297,11 @@ def test_invalid_state_value_is_rejected():
     )
 
     with pytest.raises(ValueError):
-        get_block_state("0001-1000")
+        get_block_state("0001-0500")
 
 
 def test_same_state_transition_is_rejected():
-    block_id = "0001-1000"
+    block_id = "0001-0500"
 
     start_block(
         block_id,
@@ -318,7 +318,7 @@ def test_same_state_transition_is_rejected():
 
 
 def test_approved_block_cannot_be_started_again():
-    block_id = "0001-1000"
+    block_id = "0001-0500"
 
     start_block(
         block_id,
@@ -343,7 +343,7 @@ def test_save_state_is_atomic_and_leaves_no_tmp():
     """Normal atomic save must leave a valid JSON file and no leftover .tmp."""
     state = {
         "blocks": {
-            "0001-1000": {
+            "0001-0500": {
                 "state": RUNNING,
             }
         }
@@ -368,7 +368,7 @@ def test_failed_write_does_not_destroy_previous_state(monkeypatch):
     """
     original = {
         "blocks": {
-            "0001-1000": {
+            "0001-0500": {
                 "state": COMPLETED,
             }
         }
@@ -387,7 +387,7 @@ def test_failed_write_does_not_destroy_previous_state(monkeypatch):
         save_state(
             {
                 "blocks": {
-                    "0001-1000": {
+                    "0001-0500": {
                         "state": FAILED,
                     }
                 }

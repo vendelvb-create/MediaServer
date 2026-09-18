@@ -8,7 +8,7 @@ from logger import (
     log_build_failure,
     start_build_log,
 )
-from path_safety import get_test_root
+from path_safety import get_media_root
 
 
 def _cleanup_log_file(path: Path) -> None:
@@ -25,13 +25,13 @@ def _close_logger_handlers(logger) -> None:
         logger.removeHandler(handler)
 
 
-def test_get_log_dir_is_inside_test_root():
+def test_get_log_dir_is_inside_media_root():
     log_dir = get_log_dir()
 
     assert log_dir.resolve().is_relative_to(
-        get_test_root().resolve()
+        get_media_root().resolve()
     )
-    assert log_dir.name == "_Logs"
+    assert log_dir.name == "Logs"
 
 
 def test_get_logger_creates_logger_and_log_file():
@@ -58,12 +58,12 @@ def test_get_logger_creates_logger_and_log_file():
 
 def test_start_build_log_records_required_initial_fields():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
         data_sources=["source_a", "source_b"],
     )
 
-    assert build_log.block_id == "0001-1000"
+    assert build_log.block_id == "0001-0500"
     assert build_log.operation == "catalog build"
     assert build_log.data_sources == [
         "source_a",
@@ -91,7 +91,7 @@ def test_start_build_log_records_required_initial_fields():
 
 def test_build_log_records_operation_details():
     build_log = BuildLog(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
         data_sources=["API", "local cache"],
         downloads=12,
@@ -107,7 +107,7 @@ def test_build_log_records_operation_details():
 
     text = build_log.to_text()
 
-    assert "Build/Block ID: 0001-1000" in text
+    assert "Build/Block ID: 0001-0500" in text
     assert "Operation: catalog build" in text
     assert "Data Sources: API, local cache" in text
     assert "Downloads: 12" in text
@@ -122,7 +122,7 @@ def test_build_log_records_operation_details():
 
 def test_build_log_finish_records_end_time_duration_and_results():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
     )
 
@@ -139,7 +139,7 @@ def test_build_log_finish_records_end_time_duration_and_results():
 
 def test_build_log_failure_records_error_and_timestamp():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
     )
 
@@ -153,7 +153,7 @@ def test_build_log_failure_records_error_and_timestamp():
 
 def test_build_log_add_error_and_warning():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="test operation",
     )
 
@@ -166,7 +166,7 @@ def test_build_log_add_error_and_warning():
 
 def test_build_log_verification_result_is_explicit():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="verification",
     )
 
@@ -177,7 +177,7 @@ def test_build_log_verification_result_is_explicit():
 
 def test_log_build_complete_writes_human_readable_log():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
         data_sources=["test source"],
     )
@@ -194,16 +194,16 @@ def test_log_build_complete_writes_human_readable_log():
     try:
         assert log_file.exists()
         assert log_file.resolve().is_relative_to(
-            get_test_root().resolve()
+            get_media_root().resolve()
         )
-        assert log_file.parent.name == "_Logs"
+        assert log_file.parent.name == "Logs"
 
         content = log_file.read_text(
             encoding="utf-8"
         )
 
         assert "MediaServer Build Log" in content
-        assert "Build/Block ID: 0001-1000" in content
+        assert "Build/Block ID: 0001-0500" in content
         assert "Operation: catalog build" in content
         assert "StartTime:" in content
         assert "EndTime:" in content
@@ -218,7 +218,7 @@ def test_log_build_complete_writes_human_readable_log():
 
 def test_log_build_failure_writes_failure_log():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
     )
 
@@ -234,7 +234,7 @@ def test_log_build_failure_writes_failure_log():
             encoding="utf-8"
         )
 
-        assert "Build/Block ID: 0001-1000" in content
+        assert "Build/Block ID: 0001-0500" in content
         assert "Final Result: FAILED" in content
         assert "CRITICAL: source unavailable." in content
         assert "EndTime:" in content
@@ -245,7 +245,7 @@ def test_log_build_failure_writes_failure_log():
 
 def test_failure_log_contains_last_known_timestamp():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
     )
 
@@ -265,7 +265,7 @@ def test_failure_log_contains_last_known_timestamp():
 
 def test_log_filename_is_safe_for_block_identifier():
     build_log = start_build_log(
-        block_id="0001-1000/test",
+        block_id="0001-0500/test",
         operation="catalog build",
     )
 
@@ -278,7 +278,7 @@ def test_log_filename_is_safe_for_block_identifier():
     try:
         assert log_file.exists()
         assert log_file.resolve().is_relative_to(
-            get_test_root().resolve()
+            get_media_root().resolve()
         )
         assert "/" not in log_file.name
         assert "\\" not in log_file.name
@@ -288,7 +288,7 @@ def test_log_filename_is_safe_for_block_identifier():
 
 def test_log_build_complete_requires_explicit_verification_result():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
     )
 
@@ -311,7 +311,7 @@ def test_log_build_complete_requires_explicit_verification_result():
 
 def test_empty_collections_are_human_readable():
     build_log = start_build_log(
-        block_id="0001-1000",
+        block_id="0001-0500",
         operation="catalog build",
         data_sources=[],
     )

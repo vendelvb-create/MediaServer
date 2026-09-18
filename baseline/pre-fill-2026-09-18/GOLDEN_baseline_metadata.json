@@ -1,0 +1,16 @@
+{
+  "version": "Golden-Baseline-v1.1",
+  "captured": "2026-09-18 22:56:41",
+  "root": "D:\\MediaServer",
+  "counts": {
+    "Movies": 1497,
+    "Series": 1285,
+    "Anime": 1378,
+    "Cartoons": 114
+  },
+  "total": 4274,
+  "non_empty_folders": 0,
+  "inventory_sha256": "E9FBE961FFC38E6CE90688B3CB8C8F6E7E379CD35ECAD79AF4ED3B7C36A9D1E9",
+  "inventory_hash_verified": true,
+  "package_sha256": "63E008AFA269E333342C9A046CFB9F1FB9ADAA325A059B8689E1E7974D13D2D1"
+}
