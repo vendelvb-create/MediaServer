@@ -442,3 +442,36 @@ One harmless empty housekeeping directory remains for optional removal:
 - `Backups\GlobalMicroFixV2`
 
 The golden baseline is ready to be backed up into the repository before the controlled fill/rebuild phase starts.
+
+
+### Final housekeeping v1.1 — VERIFIED 2026-09-18
+
+The final local housekeeping pass was completed with an archive-first workflow.
+
+Preview:
+
+- safe archive/delete targets: **17**
+- missing/already gone: **0**
+- protected targets: **0**
+- preview SHA256 matched exactly
+
+Fix verification:
+
+- archived and deleted: **17 / 17**
+- delete failures: **0**
+- protected blocks: **0**
+- archive created: `D:\MediaServer\Backups\CleanupArchive\MediaServer_final_housekeeping_20260918_233114.zip`
+- archive size: **261,866 bytes**
+
+The pass removed only legacy planning/repair manifests, loose obsolete manifests, old 2026-09-16 run/repair logs, and the empty `Backups\GlobalMicroFixV2` folder.
+
+Preserved:
+
+- GoldenBaselineV1
+- GlobalFinalAuditV1
+- HistoryCleanupV1
+- FinalHousekeepingV1_1
+- CleanupArchive
+- Movies / Series / Anime / Cartoons / Data
+
+Local cleanup and housekeeping are now complete.
