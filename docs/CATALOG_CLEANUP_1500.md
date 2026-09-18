@@ -381,3 +381,35 @@ Rules for the fill phase:
 - use 500-title batches where practical
 - preview → review → build/fix → inventory → verify
 - once 1500/1500/1500/1500 is verified, create a golden baseline snapshot before adding media
+
+
+### Cleanup history archive — VERIFIED 2026-09-18
+
+After cleanup completion, old cleanup artifacts were archived and removed using an archive-first workflow.
+
+Preview selected:
+
+- 23 cleanup log files
+- 14 old cleanup manifest directories
+- 11 old cleanup backup/snapshot directories
+- 48 total items
+
+Verification:
+
+- preview-plan SHA256 matched exactly
+- archive created: `D:\MediaServer\Backups\CleanupArchive\MediaServer_cleanup_history_20260918_224733.zip`
+- archive size: 1,620,517 bytes
+- archived and deleted: **48 / 48**
+- delete failures: **0**
+
+Preserved:
+
+- `Manifests\GlobalFinalAuditV1`
+- `Manifests\GlobalMicroFixV2`
+- `Manifests\HistoryCleanupV1`
+- Data / RankingCache
+- Movies / Series / Anime / Cartoons
+- non-cleanup logs
+- actual media files
+
+The workspace is now cleaned of old cleanup clutter while retaining a single recoverable archive.
