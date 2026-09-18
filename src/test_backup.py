@@ -4,18 +4,18 @@ import shutil
 import pytest
 
 from backup import create_backup, restore_backup
-from path_safety import get_test_root, safe_path
+from path_safety import get_media_root, safe_path
 
 
 def test_create_backup_copies_directory():
-    root = get_test_root()
+    root = get_media_root()
     source = root / "_Test_Backup_Source"
 
     source.mkdir(parents=True, exist_ok=True)
     test_file = source / "test.txt"
     test_file.write_text("backup test", encoding="utf-8")
 
-    backup_root = safe_path("_Backups")
+    backup_root = safe_path("Backups")
     existing = set(backup_root.glob("backup_*"))
 
     try:
@@ -42,7 +42,7 @@ def test_create_backup_rejects_missing_source():
 
 
 def test_create_backup_rejects_file_source():
-    root = get_test_root()
+    root = get_media_root()
     source_file = root / "_Test_Backup_File"
 
     source_file.write_text(
@@ -59,18 +59,18 @@ def test_create_backup_rejects_file_source():
 
 def test_create_backup_rejects_backup_root_as_source():
     with pytest.raises(ValueError):
-        create_backup("_Backups")
+        create_backup("Backups")
 
 
-def test_create_backup_rejects_test_root_as_source():
-    root = get_test_root()
+def test_create_backup_rejects_media_root_as_source():
+    root = get_media_root()
 
     with pytest.raises(ValueError):
         create_backup(root)
 
 
 def test_restore_backup_copies_backup_to_destination():
-    root = get_test_root()
+    root = get_media_root()
 
     source = root / "_Test_Restore_Source"
     destination = root / "_Test_Restore_Destination"
@@ -112,14 +112,14 @@ def test_restore_backup_copies_backup_to_destination():
 def test_restore_backup_rejects_missing_backup():
     with pytest.raises(FileNotFoundError):
         restore_backup(
-            "_Backups/backup_that_does_not_exist",
+            "Backups/backup_that_does_not_exist",
             "_Test_Restore_Destination",
         )
 
 
 def test_restore_backup_rejects_backup_file():
-    root = get_test_root()
-    backup_root = safe_path("_Backups")
+    root = get_media_root()
+    backup_root = safe_path("Backups")
 
     backup_root.mkdir(parents=True, exist_ok=True)
 
@@ -142,13 +142,13 @@ def test_restore_backup_rejects_backup_file():
 def test_restore_backup_rejects_backup_root_as_source():
     with pytest.raises(ValueError):
         restore_backup(
-            "_Backups",
+            "Backups",
             "_Test_Restore_Destination",
         )
 
 
 def test_restore_backup_rejects_source_outside_backup_root():
-    root = get_test_root()
+    root = get_media_root()
     source = root / "_Test_Not_A_Backup"
 
     source.mkdir(parents=True, exist_ok=True)
@@ -164,7 +164,7 @@ def test_restore_backup_rejects_source_outside_backup_root():
 
 
 def test_restore_backup_rejects_existing_destination():
-    root = get_test_root()
+    root = get_media_root()
 
     source = root / "_Test_Restore_Source"
     destination = root / "_Test_Restore_Destination"
@@ -203,7 +203,7 @@ def test_restore_backup_rejects_existing_destination():
 
 
 def test_restore_backup_rejects_backup_destination():
-    root = get_test_root()
+    root = get_media_root()
     source = root / "_Test_Restore_Source"
 
     source.mkdir(parents=True, exist_ok=True)
@@ -221,7 +221,7 @@ def test_restore_backup_rejects_backup_destination():
         with pytest.raises(ValueError):
             restore_backup(
                 backup_path,
-                "_Backups/restored",
+                "Backups/restored",
             )
 
     finally:
@@ -233,7 +233,7 @@ def test_restore_backup_rejects_backup_destination():
 
 
 def test_restore_backup_preserves_existing_backup():
-    root = get_test_root()
+    root = get_media_root()
 
     source = root / "_Test_Restore_Source"
     destination = root / "_Test_Restore_Destination"
@@ -271,12 +271,12 @@ def test_restore_backup_preserves_existing_backup():
             shutil.rmtree(backup_path)
 
 
-def test_restore_backup_rejects_absolute_destination_outside_test_root():
+def test_restore_backup_rejects_absolute_destination_outside_media_root():
     outside_destination = Path.home() / "Desktop" / "_Unsafe_Restore"
 
     with pytest.raises(ValueError):
         restore_backup(
-            "_Backups/backup_example",
+            "Backups/backup_example",
             outside_destination,
         )
 
@@ -284,7 +284,7 @@ def test_restore_backup_rejects_absolute_destination_outside_test_root():
 def test_restore_backup_rejects_parent_traversal_destination():
     with pytest.raises(ValueError):
         restore_backup(
-            "_Backups/backup_example",
+            "Backups/backup_example",
             "../_Unsafe_Restore",
         )
 
@@ -293,12 +293,12 @@ def test_create_backup_cleans_partial_on_failure():
     """A failed backup must not leave a final-named backup_* directory."""
     from unittest.mock import patch
 
-    root = get_test_root()
+    root = get_media_root()
     source = root / "_Test_Backup_Fail_Source"
     source.mkdir(parents=True, exist_ok=True)
     (source / "data.txt").write_text("data", encoding="utf-8")
 
-    backup_root = safe_path("_Backups")
+    backup_root = safe_path("Backups")
     before_backups = set(backup_root.glob("backup_*"))
     before_tmps = set(backup_root.glob(".tmp_backup_*"))
 
@@ -326,12 +326,12 @@ def test_create_backup_cleans_partial_on_failure():
 
 def test_create_backup_atomic_success_leaves_only_final_name():
     """Successful backup appears only under the final backup_* name."""
-    root = get_test_root()
+    root = get_media_root()
     source = root / "_Test_Backup_Atomic_Source"
     source.mkdir(parents=True, exist_ok=True)
     (source / "ok.txt").write_text("ok", encoding="utf-8")
 
-    backup_root = safe_path("_Backups")
+    backup_root = safe_path("Backups")
     before_tmps = set(backup_root.glob(".tmp_backup_*"))
 
     backup_path = None
@@ -358,7 +358,7 @@ def test_create_backup_preserves_existing_valid_backup_on_failure():
     """A failure during a new backup must not destroy previous valid backups."""
     from unittest.mock import patch
 
-    root = get_test_root()
+    root = get_media_root()
     source = root / "_Test_Backup_Preserve_Source"
     source.mkdir(parents=True, exist_ok=True)
     (source / "data.txt").write_text("data", encoding="utf-8")
@@ -367,7 +367,7 @@ def test_create_backup_preserves_existing_valid_backup_on_failure():
     existing_backup = create_backup(source)
     assert existing_backup.exists()
 
-    backup_root = safe_path("_Backups")
+    backup_root = safe_path("Backups")
     before = set(backup_root.glob("backup_*"))
 
     try:
