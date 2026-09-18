@@ -475,3 +475,37 @@ Preserved:
 - Movies / Series / Anime / Cartoons / Data
 
 Local cleanup and housekeeping are now complete.
+
+
+### Final prune v2.1 — VERIFIED / LOCAL CLEANUP COMPLETE 2026-09-18
+
+The final pre-fill prune completed successfully after the full MediaServer audit.
+
+Preview verification:
+
+- Golden baseline SHA256 verified: `E9FBE961FFC38E6CE90688B3CB8C8F6E7E379CD35ECAD79AF4ED3B7C36A9D1E9`
+- timestamp Golden duplicate SHA256 verified against canonical inventory
+- required RankingCache files verified: 3
+- safe archive/delete targets: **26**
+- missing targets: **0**
+- protected blocks: **0**
+
+Fix verification:
+
+- consolidated archive: `D:\MediaServer\Backups\CleanupArchive\MediaServer_pre_fill_consolidated_20260918_234948.zip`
+- archive size: **7,656,876 bytes**
+- archive SHA256: `A4374AB84E121C0729FA0E9AE30525C77F9E2B441494CCDC478AE1BBFA4C02B6`
+- archived and deleted targets: **26 / 26**
+- delete failures: **0**
+- protected blocks: **0**
+- CACHE root items after: **0**
+- Logs root items after: **0**
+
+Preserved and re-verified:
+
+- canonical `GOLDEN_inventory.csv`
+- `GOLDEN_inventory.sha256`
+- required `Data\RankingCache` files
+- Movies / Series / Anime / Cartoons
+
+Local filesystem cleanup is now complete. The next phase is repository Golden Baseline backup, then controlled fill/rebuild to 1500 per category.
