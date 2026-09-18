@@ -2,7 +2,7 @@
 
 **Status:** Active cleanup plan  
 **Approved working root:** `D:\MediaServer`  
-**Last verified folder counts:** Movies 1497 (2026-09-18), Series 1287, Anime 1560, Cartoons 112  
+**Last verified folder counts:** Movies 1497, Series 1285, Anime 1560, Cartoons 114 (2026-09-18)  
 **Media-file state:** The generated media folders are currently empty; cleanup operates on folder structure only.
 
 ## Goal
@@ -142,18 +142,42 @@ Known near-duplicate/remake groups remain intentionally untouched because they a
 
 Movies is considered structurally cleaned for this pass. Filling the three verified gaps back toward 1500 is deferred until the existing categories have all been cleaned.
 
+### Series cleanup v2 — VERIFIED 2026-09-18
+
+Series cleanup v2 was applied and verified.
+
+Before:
+
+- Series: 1287
+- Cartoons: 112
+
+Applied safe fixes:
+
+- `Dirin Dirin`: Series → Cartoons
+- `Sugarland`: Series → Cartoons
+
+Verification:
+
+- 2 folders moved to Cartoons
+- 0 blocked actions
+- review-only titles such as `The Heroes` were untouched
+- Series after: **1285**
+- Cartoons after: **114**
+
+The earlier Series v1 preview was intentionally not run because its safe plan contained no actionable changes.
+
 ## Next active category
 
-**Series**
+**Anime**
 
-The Series pass must focus on:
+The Anime pass must focus on:
 
-- remaining Anime misplaced under Series
-- remaining Cartoons misplaced under Series
-- duplicate Series folders
-- malformed Series names
-- cross-category collisions
-- safe empty-folder moves/deletions only after preview and review
+- duplicate Anime folders
+- Series/Cartoon titles misplaced in Anime
+- malformed Anime names
+- franchise/season naming collisions
+- keeping Anime Movies and standalone OVAs deferred
+- safe empty-folder changes only after preview and review
 
 ## Repository rule
 
