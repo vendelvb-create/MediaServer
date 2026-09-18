@@ -2,7 +2,7 @@
 
 **Status:** Active cleanup plan  
 **Approved working root:** `D:\MediaServer`  
-**Last verified folder counts:** Movies 1497, Series 1285, Anime 1560, Cartoons 114 (2026-09-18)  
+**Last verified folder counts:** Movies 1497, Series 1285, Anime 1447, Cartoons 114 (2026-09-18)  
 **Media-file state:** The generated media folders are currently empty; cleanup operates on folder structure only.
 
 ## Goal
@@ -182,3 +182,36 @@ The Anime pass must focus on:
 ## Repository rule
 
 This document records the active catalog-cleanup decision and supersedes older block-size/status statements that still describe 1,000-title blocks or the original pre-build state. Those older sections should be harmonized during the documentation cleanup, but this document governs current catalog work in the meantime.
+
+
+### Anime cleanup v2 — VERIFIED 2026-09-18
+
+Anime cleanup v2 was applied and independently verified against the before/after inventories and the hashed preview plan.
+
+Before:
+
+- Anime: 1560
+- all Anime folders empty
+
+Applied safe fix:
+
+- removed 113 empty top-level Anime variants whose names explicitly contained Season / Part / Cour / Final Season markers and whose exact base top-level folder already existed
+
+Verification:
+
+- preview plan rows: 113
+- fix result rows: 113
+- successful status: `DELETED_EMPTY_TOPLEVEL_VARIANT` = 113
+- preview SHA256 matched the reviewed plan
+- before inventory: 1560
+- after inventory: 1447
+- exactly 113 folders removed
+- 0 unexpected removals
+- 0 unexpected additions
+- all base folders preserved
+- 0 exact duplicate folder names after the fix
+- all remaining Anime folders still empty
+- Anime Movies / OVA / Specials were untouched
+- base-missing variants were untouched
+
+Anime is not yet considered fully cleaned. A final Anime review must still cover remaining franchise/arc naming variants, unmatched titles, naming anomalies and any legitimate cross-category collisions before the category is locked.
