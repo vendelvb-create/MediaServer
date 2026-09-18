@@ -2,7 +2,7 @@
 
 **Status:** Active cleanup plan  
 **Approved working root:** `D:\MediaServer`  
-**Last verified folder counts (2026-09-16):** Movies 1500, Series 1287, Anime 1560, Cartoons 112  
+**Last verified folder counts:** Movies 1497 (2026-09-18), Series 1287, Anime 1560, Cartoons 112  
 **Media-file state:** The generated media folders are currently empty; cleanup operates on folder structure only.
 
 ## Goal
@@ -25,9 +25,20 @@ Long-term target:
 - Top 10,000 Anime
 - Top 10,000 Cartoons
 
+## Working order
+
+Cleanup is handled one category at a time to reduce cross-category mistakes:
+
+1. Movies
+2. Series
+3. Anime
+4. Cartoons
+5. Final cross-category verification
+6. Fill verified gaps toward 1500 per category where possible
+
 ## Working batch size
 
-All catalog work is now performed in **500-title batches**:
+All later catalog expansion is performed in **500-title batches**:
 
 - 0001–0500
 - 0501–1000
@@ -61,7 +72,7 @@ SNAPSHOT
 → NEW INVENTORY
 → VERIFY
 → APPROVE
-→ NEXT BATCH
+→ NEXT CATEGORY/BATCH
 ```
 
 Preview and Fix commands should be distributed together in one package when practical, but Fix must remain blocked while unresolved BLOCK/REVIEW items exist.
@@ -92,13 +103,57 @@ A title collision across categories must be reviewed rather than automatically m
 
 ## Current cleanup history
 
+### Verified category repair — 2026-09-16
+
 The first verified category repair corrected 213 misplaced Series entries:
 
 - confirmed Anime entries were moved/deduplicated into Anime
 - confirmed Cartoon entries were moved into Cartoons
-- the verified post-run totals became Movies 1500 / Series 1287 / Anime 1560 / Cartoons 112
+- verified post-run totals became Movies 1500 / Series 1287 / Anime 1560 / Cartoons 112
 
 Later v6/v7/v8 Top-500 attempts were **preview-only** and intentionally made no filesystem changes after their classification weaknesses were detected.
+
+### Movies cleanup v1 — VERIFIED 2026-09-18
+
+Movies cleanup was handled separately and is now verified.
+
+Before:
+
+- Movies folders: 1500
+- all folders empty
+
+Applied safe fixes:
+
+- deleted wrong-year duplicate `Arsenic and Old Lace 1942`; kept `Arsenic and Old Lace 1944`
+- deleted wrong-year duplicate `His Girl Friday 1939`; kept `His Girl Friday 1940`
+- deleted wrong-year duplicate `Uri_ The Surgical Strike 2018`; kept `Uri_ The Surgical Strike 2019`
+- renamed `Apollo 13 PG` → `Apollo 13 1995`
+
+Verification:
+
+- 3 empty wrong-year duplicates deleted
+- 1 malformed empty folder renamed
+- no blocked actions
+- no duplicate folder names introduced
+- all remaining Movie folders are empty
+- Movies folders after fix: **1497**
+
+Known near-duplicate/remake groups remain intentionally untouched because they are legitimate separate works or require review.
+
+Movies is considered structurally cleaned for this pass. Filling the three verified gaps back toward 1500 is deferred until the existing categories have all been cleaned.
+
+## Next active category
+
+**Series**
+
+The Series pass must focus on:
+
+- remaining Anime misplaced under Series
+- remaining Cartoons misplaced under Series
+- duplicate Series folders
+- malformed Series names
+- cross-category collisions
+- safe empty-folder moves/deletions only after preview and review
 
 ## Repository rule
 
