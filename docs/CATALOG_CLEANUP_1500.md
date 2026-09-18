@@ -2,7 +2,7 @@
 
 **Status:** Active cleanup plan  
 **Approved working root:** `D:\MediaServer`  
-**Last verified folder counts:** Movies 1497, Series 1285, Anime 1447, Cartoons 114 (2026-09-18)  
+**Last verified folder counts:** Movies 1497, Series 1285, Anime 1432, Cartoons 114 (2026-09-18)  
 **Media-file state:** The generated media folders are currently empty; cleanup operates on folder structure only.
 
 ## Goal
@@ -215,3 +215,39 @@ Verification:
 - base-missing variants were untouched
 
 Anime is not yet considered fully cleaned. A final Anime review must still cover remaining franchise/arc naming variants, unmatched titles, naming anomalies and any legitimate cross-category collisions before the category is locked.
+
+
+### Anime cleanup v3 — VERIFIED 2026-09-18
+
+Anime cleanup v3 was applied and verified against the reviewed preview plan and before/after inventories.
+
+Before:
+
+- Anime: 1447
+- all Anime folders empty
+
+Applied safe fixes:
+
+- removed 7 explicit season/final-season variants whose base folder already existed
+- created/preserved 5 reviewed base roots
+- removed 13 empty season variants belonging to those 5 new base roots
+
+Verification:
+
+- preview plan rows: 20
+- preview blocked rows: 0
+- plan SHA256 matched the reviewed file
+- fix result rows: 20
+- successful status: `DELETED_EMPTY_VARIANT` = 20
+- new base roots created/preserved: 5
+- before inventory: 1447
+- after inventory: **1432**
+- exactly the 20 planned variant folders were removed
+- exactly the 5 planned base folders were added
+- 0 unexpected removals
+- 0 unexpected additions
+- 0 exact duplicate Anime folder names after the fix
+- all remaining Anime folders are empty
+- Anime Movies / OVA / Specials, ONA groups and ambiguous Shingeki variants were untouched
+
+Anime remains in final-review status before the category is locked.
