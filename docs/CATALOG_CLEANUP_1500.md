@@ -294,3 +294,42 @@ Anime is now considered structurally cleaned and **LOCKED** for the current pass
 **Cartoons**
 
 Cartoons currently stands at 114 verified folders and requires its own conservative cleanup/build strategy. Generic IMDb `Animation` metadata must not be treated as sufficient proof that a title belongs in Cartoons.
+
+
+### Cartoons cleanup v2 — VERIFIED / LOCKED 2026-09-18
+
+Cartoons cleanup v2 was applied and verified against the reviewed preview plan, SHA256, fix results and before/after inventories.
+
+Before:
+
+- Cartoons: 114
+- all Cartoon folders empty
+
+Applied safe renames:
+
+- `DuckTales` → `DuckTales (2017)`
+- `Devil May Cry` → `Devil May Cry (2025)`
+- `X-Men` → `X-Men (1992)`
+
+Verification:
+
+- preview plan rows: 3
+- preview blocked rows: 0
+- plan SHA256 matched exactly
+- fix result rows: 3
+- successful status: `RENAMED` = 3
+- before inventory: 114
+- after inventory: **114**
+- exactly the 3 planned old names disappeared
+- exactly the 3 planned canonical names appeared
+- 0 unexpected removals
+- 0 unexpected additions
+- 0 exact duplicate Cartoon folder names after the fix
+- all remaining Cartoon folders are empty
+- no new Cartoons were added
+
+The 114-folder Cartoon baseline is now considered structurally cleaned and **LOCKED**.
+
+## Next phase
+
+Run one global cross-category final audit across Movies / Series / Anime / Cartoons. If clean, mark the cleanup phase complete and begin the controlled fill/rebuild phase toward 1500 in each category.
