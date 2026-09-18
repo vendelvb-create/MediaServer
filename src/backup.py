@@ -20,7 +20,7 @@ def create_backup(source: str | Path) -> Path:
             f"Backup source must be a directory: {source_path}"
         )
 
-    backup_root = safe_path("_Backups")
+    backup_root = safe_path("Backups")
 
     # Backup-mappen skal aldri kunne kopiere seg selv,
     # eller en mappe som inneholder backup-mappen.
@@ -68,9 +68,9 @@ def restore_backup(
     Gjenoppretter en backup til en eksplisitt angitt destination.
 
     Restore er konservativ:
-    - backup må ligge under _Backups/
-    - destination må ligge under testroten
-    - _Backups kan ikke brukes som destination
+    - backup må ligge under Backups/
+    - destination må ligge under MediaServer-roten
+    - Backups kan ikke brukes som destination
     - eksisterende destination avvises
     - ingen eksisterende eller ukjente filer slettes automatisk
     """
@@ -78,7 +78,7 @@ def restore_backup(
     backup_path = safe_path(backup)
     destination_path = safe_path(destination)
 
-    backup_root = safe_path("_Backups")
+    backup_root = safe_path("Backups")
 
     if not backup_path.exists():
         raise FileNotFoundError(
