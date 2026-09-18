@@ -509,3 +509,30 @@ Preserved and re-verified:
 - Movies / Series / Anime / Cartoons
 
 Local filesystem cleanup is now complete. The next phase is repository Golden Baseline backup, then controlled fill/rebuild to 1500 per category.
+
+
+### GitHub refactor verification — PASS 2026-09-19
+
+The current MediaServer architecture refactor was tested from the exact repository snapshot at commit:
+
+`21516e083ded1103834fcb36bd0770a0769ff28e`
+
+Verified changes include:
+
+- production root aligned to `D:\MediaServer`
+- tests isolated through `MEDIASERVER_ROOT`
+- runtime directories aligned to `Backups`, `Logs`, and `Data`
+- state/batch logic aligned to 500-position blocks
+- backup safety validation runs before filesystem existence checks
+- legacy path/block references removed from active code/tests
+
+Local isolated test result:
+
+- **71 passed**
+- **0 failed**
+- **0 warnings**
+- pytest exit code: **0**
+- exact-commit snapshot sanity checks: **PASS**
+- real `D:\MediaServer` was **not** used as the test root
+
+The branch is currently ahead of `main` and not behind it. Merge remains gated on completing the repository Golden Baseline artifact set.
