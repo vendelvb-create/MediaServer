@@ -8,15 +8,15 @@ from path_safety import safe_path
 
 
 def get_log_dir() -> Path:
-    """Returnerer godkjent loggmappe innenfor testroten."""
-    return safe_path("_Logs")
+    """Returnerer godkjent loggmappe innenfor MediaServer-roten."""
+    return safe_path("Logs")
 
 
 def get_logger(name: str = "mediaserver") -> logging.Logger:
     """
     Returnerer prosjektets grunnleggende logger.
 
-    Loggeren skriver til _Logs/mediaserver.log.
+    Loggeren skriver til Logs/mediaserver.log.
     Alle filstier valideres gjennom safe_path().
     """
     log_dir = get_log_dir()
@@ -27,7 +27,7 @@ def get_logger(name: str = "mediaserver") -> logging.Logger:
     if not logger.handlers:
         logger.setLevel(logging.INFO)
 
-        log_file = safe_path("_Logs/mediaserver.log")
+        log_file = safe_path("Logs/mediaserver.log")
 
         handler = logging.FileHandler(
             log_file,
@@ -208,7 +208,7 @@ class BuildLog:
 
     def write(self) -> Path:
         """
-        Skriver build-loggen til _Logs/.
+        Skriver build-loggen til Logs/.
 
         Returnerer den sikre loggfilens sti.
         """
@@ -227,7 +227,7 @@ class BuildLog:
         )
 
         log_file = safe_path(
-            f"_Logs/build_{safe_block_id}_{timestamp}.log"
+            f"Logs/build_{safe_block_id}_{timestamp}.log"
         )
 
         log_file.write_text(
