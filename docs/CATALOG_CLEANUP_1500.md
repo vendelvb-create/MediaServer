@@ -2,7 +2,7 @@
 
 **Status:** Active cleanup plan  
 **Approved working root:** `D:\MediaServer`  
-**Last verified folder counts:** Movies 1497, Series 1285, Anime 1432, Cartoons 114 (2026-09-18)  
+**Last verified folder counts:** Movies 1497, Series 1285, Anime 1379, Cartoons 114 (2026-09-18)  
 **Media-file state:** The generated media folders are currently empty; cleanup operates on folder structure only.
 
 ## Goal
@@ -251,3 +251,46 @@ Verification:
 - Anime Movies / OVA / Specials, ONA groups and ambiguous Shingeki variants were untouched
 
 Anime remains in final-review status before the category is locked.
+
+
+### Anime final cleanup v5 — VERIFIED / LOCKED 2026-09-18
+
+Anime final cleanup v5 was applied and verified against the reviewed preview plan, SHA256, fix results and before/after inventories.
+
+Before:
+
+- Anime: 1432
+- all Anime folders empty
+
+Applied safe fixes:
+
+- removed 52 empty TV alias/season roots where the canonical root already existed
+- created/preserved 1 canonical root: `Working!!`
+- removed 2 empty `Working!!` season-variant roots
+
+Verification:
+
+- preview plan rows: 54
+- preview blocked rows: 0
+- plan SHA256 matched exactly
+- fix result rows: 54
+- successful status: `DELETED_EMPTY_TV_ALIAS_OR_SEASON` = 54
+- before inventory: 1432
+- after inventory: **1379**
+- exactly the 54 planned variant folders were removed
+- exactly 1 planned canonical folder was added
+- 0 unexpected removals
+- 0 unexpected additions
+- all planned canonical folders exist after the fix
+- 0 exact duplicate Anime folder names after the fix
+- all remaining Anime folders are empty
+- Movies / OVA / Specials / ONA were untouched
+- distinct/remake groups intentionally kept separate remained untouched
+
+Anime is now considered structurally cleaned and **LOCKED** for the current pass. Deferred Movie / OVA / Special / ONA handling remains a future phase and must not block progress on the main TV-anime catalog.
+
+## Next active category
+
+**Cartoons**
+
+Cartoons currently stands at 114 verified folders and requires its own conservative cleanup/build strategy. Generic IMDb `Animation` metadata must not be treated as sufficient proof that a title belongs in Cartoons.
